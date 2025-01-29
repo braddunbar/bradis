@@ -333,7 +333,6 @@ name = "bradis"
 version = "0.1.0"
 dependencies = [
  "arrayvec 0.7.6",
- "bstr",
  "bytes",
  "futures",
  "hashbrown 0.15.2",
@@ -380,17 +379,6 @@ checksum = "74fa05ad7d803d413eb8380983b092cbbaf9a85f151b871360e7b00cd7060b37"
 dependencies = [
  "alloc-no-stdlib",
  "alloc-stdlib",
-]
-
-[[package]]
-name = "bstr"
-version = "1.11.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "531a9155a481e2ee699d4f98f43c0ca4ff8ee1bfd55c31e9e98fb29d2b176fe0"
-dependencies = [
- "memchr",
- "regex-automata",
- "serde",
 ]
 
 [[package]]
