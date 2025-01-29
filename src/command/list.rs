@@ -10,8 +10,8 @@ use crate::{
     BlockResult, CommandResult,
 };
 use logos::Logos;
-use std::cmp::min;
-use tokio::{sync::oneshot, time::Duration};
+use std::{cmp::min, time::Duration};
+use tokio::sync::oneshot;
 
 #[derive(Clone, Copy, Debug, Eq, Hash, Logos, PartialEq)]
 pub enum EdgeOption {
