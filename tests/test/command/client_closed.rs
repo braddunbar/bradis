@@ -1,0 +1,62 @@
+use crate::test::{Test, TestError, TIMEOUT};
+use std::sync::Mutex;
+
+use nu_engine::CallExt;
+use nu_protocol::{
+    engine::{Call, Command, EngineState, Stack},
+    Category, PipelineData, ShellError, Signature, SyntaxShape, Type, Value,
+};
+use tokio::{runtime::Handle, time::timeout};
+use triomphe::Arc;
+
+#[derive(Clone)]
+pub struct ClientClosedCommand(pub Arc<Mutex<Option<Test>>>);
+
+impl Command for ClientClosedCommand {
+    fn name(&self) -> &str {
+        "client closed"
+    }
+
+    fn description(&self) -> &str {
+        "is the client closed?"
+    }
+
+    fn signature(&self) -> Signature {
+        Signature::build("client closed")
+            .input_output_types(vec![(Type::Any, Type::Bool)])
+            .required("index", SyntaxShape::Int, "index of the client")
+            .category(Category::Custom("bradis".into()))
+    }
+
+    fn run(
+        &self,
+        state: &EngineState,
+        stack: &mut Stack,
+        call: &Call,
+        _input: PipelineData,
+    ) -> Result<PipelineData, ShellError> {
+        let index: usize = call.req(state, stack, 0)?;
+
+        let mut guard = self.0.lock().unwrap();
+        let test = guard.as_mut().unwrap();
+        let client = test
+            .clients
+            .get_mut(&index)
+            .ok_or(TestError::MissingClient)?;
+        let handle = Handle::current();
+        let value = handle
+            .block_on(timeout(TIMEOUT, client.reader.value()))
+            .map_err(TestError::from)?
+            .map_err(TestError::from)?;
+        let closed = value.is_none();
+        drop(guard);
+
+        Ok(PipelineData::Value(
+            Value::Bool {
+                val: closed,
+                internal_span: call.span(),
+            },
+            None,
+        ))
+    }
+}

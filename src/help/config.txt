@@ -1,0 +1,11 @@
+CONFIG <subcommand> [<arg> [value] [opt] ...]. Subcommands are:
+GET <pattern>
+    Return parameters matching the glob-like <pattern> and their values.
+SET <directive> <value>
+    Set the configuration <directive> to <value>.
+RESETSTAT
+    Reset statistics reported by the INFO command.
+REWRITE
+    Rewrite the configuration file.
+HELP
+    Prints this help.
