@@ -347,7 +347,6 @@ dependencies = [
  "nu-std",
  "ordered-float",
  "piccolo",
- "pin-project",
  "proptest",
  "rand",
  "respite",
@@ -2668,26 +2667,6 @@ dependencies = [
  "hashbrown 0.14.5",
  "rand",
  "thiserror 1.0.69",
-]
-
-[[package]]
-name = "pin-project"
-version = "1.1.8"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1e2ec53ad785f4d35dac0adea7f7dc6f1bb277ad84a680c7afefeae05d1f5916"
-dependencies = [
- "pin-project-internal",
-]
-
-[[package]]
-name = "pin-project-internal"
-version = "1.1.8"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d56a66c0c55993aa927429d0f8a0abfd74f084e4d9c192cffed01e418d83eefb"
-dependencies = [
- "proc-macro2",
- "quote",
- "syn 2.0.96",
 ]
 
 [[package]]
