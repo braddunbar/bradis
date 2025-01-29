@@ -1,6 +1,7 @@
 use crate::test::{command::*, TestClient, TestError, TestResult, TIMEOUT};
 use std::{env::current_dir, sync::Mutex};
 
+use bradis::{Addr, Server};
 use hashbrown::HashMap;
 use miette::{Diagnostic, MietteError, SourceSpan, SpanContents};
 use nu_cli::Print;
@@ -14,7 +15,6 @@ use nu_protocol::{
     CompileError, ParseError, PipelineData, ShellError,
 };
 use nu_std::load_standard_library;
-use bradis::{Addr, Server};
 use respite::{RespValue, RespWriter};
 use thiserror::Error;
 use tokio::{
