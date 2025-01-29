@@ -8,8 +8,7 @@ use crate::{
 };
 use bytes::Bytes;
 use ordered_float::NotNan;
-use std::{collections::VecDeque, iter::StepBy, net::SocketAddr, ops::Range};
-use tokio::time::Duration;
+use std::{collections::VecDeque, iter::StepBy, net::SocketAddr, ops::Range, time::Duration};
 
 #[derive(Clone, Debug)]
 pub struct Request {
