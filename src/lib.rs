@@ -25,7 +25,7 @@ mod time;
 pub use client::Addr;
 pub use server::Server;
 
-pub const VERSION: &str = "6.0.0";
+pub const VERSION: &str = env!("CARGO_PKG_VERSION");
 
 use client::{Client, ClientId, ReplyMessage};
 use command::{BlockResult, Command, CommandResult};
