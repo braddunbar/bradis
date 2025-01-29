@@ -3761,7 +3761,6 @@ checksum = "3d61fa4ffa3de412bfea335c6ecff681de2b609ba3c77ef3e00e521813a9ed9e"
 dependencies = [
  "backtrace",
  "bytes",
- "parking_lot",
  "pin-project-lite",
  "tokio-macros",
 ]

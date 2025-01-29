@@ -33,7 +33,6 @@ triomphe = "0.1.14"
 version = "1.42.0"
 features = [
   "macros",
-  "parking_lot",
   "rt-multi-thread",
   "sync",
   "time",
