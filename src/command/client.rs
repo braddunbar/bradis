@@ -302,11 +302,11 @@ fn kill(client: &mut Client, store: &mut Store) -> CommandResult {
                 return true;
             }
 
-            if laddr == Some(other.addr.local) {
+            if laddr == other.addr.map(|a| a.local) {
                 return true;
             }
 
-            if addr == Some(other.addr.peer) {
+            if addr == other.addr.map(|a| a.peer) {
                 return true;
             }
 

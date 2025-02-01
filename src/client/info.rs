@@ -18,7 +18,7 @@ use triomphe::Arc;
 #[derive(Debug)]
 pub struct ClientInfo {
     /// The client address
-    pub addr: Addr,
+    pub addr: Option<Addr>,
 
     /// The currently selected database, shared with the client
     pub db: Arc<AtomicUsize>,
@@ -90,13 +90,16 @@ impl ClientInfo {
         let monitor = self.monitor.load(Ordering::Relaxed);
 
         _ = write!(buffer, "id={}", self.id);
-        _ = write!(buffer, " addr={}", self.addr.peer);
-        _ = write!(buffer, " laddr={}", self.addr.local);
         _ = write!(buffer, " db={db}");
         _ = write!(buffer, " age={}", self.age());
         _ = write!(buffer, " sub={subscribers}");
         _ = write!(buffer, " psub={psubscribers}");
         _ = write!(buffer, " resp={resp}");
+
+        if let Some(addr) = self.addr {
+            _ = write!(buffer, " addr={}", addr.peer);
+            _ = write!(buffer, " laddr={}", addr.local);
+        }
 
         buffer.extend_from_slice(b" cmd=");
 

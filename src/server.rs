@@ -31,7 +31,11 @@ impl Default for Server {
 
 impl Server {
     /// Connect a client to the server with a stream and a source address.
-    pub fn connect<S: AsyncRead + AsyncWrite + Send + 'static>(&self, stream: S, addr: Addr) {
+    pub fn connect<S: AsyncRead + AsyncWrite + Send + 'static>(
+        &self,
+        stream: S,
+        addr: Option<Addr>,
+    ) {
         let store_sender = self.store_sender.clone();
         Client::spawn(stream, store_sender, self.config.clone(), addr);
     }

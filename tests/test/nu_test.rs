@@ -201,7 +201,7 @@ impl Test {
             local: format!("127.0.0.1:{index}").parse().unwrap(),
             peer: format!("1.2.3.4:{index}").parse().unwrap(),
         };
-        self.server.connect(local, addr);
+        self.server.connect(local, Some(addr));
         let client = TestClient::connect(remote).await?;
         self.clients.insert(self.current, client);
         Ok(())

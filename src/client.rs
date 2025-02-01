@@ -86,7 +86,7 @@ pub enum Tx {
 /// notifying the store of disconnection.
 pub struct Client {
     /// The client's address.
-    pub addr: Addr,
+    pub addr: Option<Addr>,
 
     /// A channel for receiving requests
     requests: mpsc::UnboundedReceiver<RespRequest>,
@@ -173,7 +173,7 @@ impl Client {
         stream: S,
         store_sender: mpsc::UnboundedSender<StoreMessage>,
         config: RespConfig,
-        addr: Addr,
+        addr: Option<Addr>,
     ) {
         // Set up various channels
         let (reader, writer) = tokio::io::split(stream);
@@ -649,8 +649,8 @@ impl Client {
         // TODO: Unix sockets…
         if self.scripting {
             _ = write!(buffer, " [{} lua]", self.db());
-        } else {
-            _ = write!(buffer, " [{} {}]", self.db(), self.addr.peer);
+        } else if let Some(addr) = self.addr {
+            _ = write!(buffer, " [{} {}]", self.db(), addr.peer);
         }
 
         _ = write!(buffer, " {}", self.request);
