@@ -116,27 +116,29 @@ impl<T> LinkedList<T> {
         let link = match edge {
             Edge::Left => self.front,
             Edge::Right => self.back,
-        };
+        }?;
 
-        link.map(|link| self.remove(link).value)
+        Some(self.remove(link).value)
     }
 
     pub fn front(&self) -> Option<&T> {
-        self.front.map(|front| &unsafe { front.as_ref() }.value)
+        let front = self.front?;
+        Some(&unsafe { front.as_ref() }.value)
     }
 
     pub fn front_mut(&mut self) -> Option<&mut T> {
-        self.front
-            .map(|mut front| &mut unsafe { front.as_mut() }.value)
+        let mut front = self.front?;
+        Some(&mut unsafe { front.as_mut() }.value)
     }
 
     pub fn back(&self) -> Option<&T> {
-        self.back.map(|back| &unsafe { back.as_ref() }.value)
+        let back = self.back?;
+        Some(&unsafe { back.as_ref() }.value)
     }
 
     pub fn back_mut(&mut self) -> Option<&mut T> {
-        self.back
-            .map(|mut back| &mut unsafe { back.as_mut() }.value)
+        let mut back = self.back?;
+        Some(&mut unsafe { back.as_mut() }.value)
     }
 
     pub fn edge(&self, edge: Edge) -> Option<&T> {
@@ -221,12 +223,11 @@ impl<'a, T> Iterator for Iter<'a, T> {
             return None;
         }
 
-        self.front.map(|front| {
-            self.len -= 1;
-            let node = unsafe { front.as_ref() };
-            self.front = node.next;
-            &node.value
-        })
+        let front = self.front?;
+        self.len -= 1;
+        let node = unsafe { front.as_ref() };
+        self.front = node.next;
+        Some(&node.value)
     }
 
     fn size_hint(&self) -> (usize, Option<usize>) {
@@ -240,12 +241,11 @@ impl<T> DoubleEndedIterator for Iter<'_, T> {
             return None;
         }
 
-        self.back.map(|back| {
-            self.len -= 1;
-            let node = unsafe { back.as_ref() };
-            self.back = node.prev;
-            &node.value
-        })
+        let back = self.back?;
+        self.len -= 1;
+        let node = unsafe { back.as_ref() };
+        self.back = node.prev;
+        Some(&node.value)
     }
 }
 
@@ -326,17 +326,15 @@ impl<T> Cursor<'_, T> {
 
     pub fn remove(&mut self) -> Option<T> {
         if self.reverse {
-            self.prev.map(|prev| {
-                let node = self.list.remove(prev);
-                self.prev = node.prev;
-                node.value
-            })
+            let prev = self.prev?;
+            let node = self.list.remove(prev);
+            self.prev = node.prev;
+            Some(node.value)
         } else {
-            self.next.map(|next| {
-                let node = self.list.remove(next);
-                self.next = node.next;
-                node.value
-            })
+            let next = self.next?;
+            let node = self.list.remove(next);
+            self.next = node.next;
+            Some(node.value)
         }
     }
 
