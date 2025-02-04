@@ -5,7 +5,7 @@ env:
 jobs:
   check:
     name: Check
-    runs-on: ubuntu-latest-arm64
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
@@ -32,4 +32,4 @@ jobs:
       - run: sh ci/test.sh
     strategy:
       matrix:
-        os: [ubuntu-latest-arm64, macos-latest]
+        os: [ubuntu-latest, macos-latest]
