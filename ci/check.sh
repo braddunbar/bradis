@@ -3,7 +3,7 @@
 set -ex
 
 cargo fmt --all -- --check
-cargo clippy --all --tests -- \
+cargo clippy --locked --all --tests -- \
   -D clippy::all \
   -D clippy::dbg_macro \
   -A clippy::enum_glob_use \

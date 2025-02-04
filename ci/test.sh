@@ -2,5 +2,5 @@
 
 set -ex
 
-cargo build --release
-cargo test --quiet
+cargo build --release --locked
+cargo test --quiet --locked
