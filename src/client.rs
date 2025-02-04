@@ -20,13 +20,19 @@ use std::{
     collections::VecDeque,
     io::Write,
     ptr,
-    sync::atomic::{AtomicBool, AtomicIsize, AtomicPtr, AtomicU8, AtomicUsize, Ordering},
+    sync::{
+        atomic::{AtomicBool, AtomicIsize, AtomicPtr, AtomicU8, AtomicUsize, Ordering},
+        Mutex,
+    },
     time::{Duration, Instant},
 };
 use tokio::{
     io::{AsyncRead, AsyncWrite},
     select,
-    sync::{mpsc, oneshot},
+    sync::{
+        mpsc,
+        oneshot::{self, error::TryRecvError},
+    },
     task::JoinHandle,
 };
 use triomphe::Arc;
@@ -107,7 +113,7 @@ pub struct Client {
     pub id: ClientId,
 
     /// A channel to listen for quit requests
-    quit_receiver: Option<oneshot::Receiver<()>>,
+    quit_receiver: oneshot::Receiver<()>,
 
     /// The client name, shared with the store
     pub name: Option<StringValue>,
@@ -179,6 +185,7 @@ impl Client {
         let (reader, writer) = tokio::io::split(stream);
         let (quit_sender, quit_receiver) = oneshot::channel();
         let (request_sender, request_receiver) = mpsc::unbounded_channel();
+        let quit_sender = Arc::new(Mutex::new(Some(quit_sender)));
 
         // Spawn the reader
         let mut reader = RespReader::new(reader, config);
@@ -191,7 +198,7 @@ impl Client {
         });
 
         // Spawn the replier
-        let reply_sender = Replier::spawn(writer);
+        let reply_sender = Replier::spawn(writer, quit_sender.clone());
 
         // Create shared info state
         let db = Arc::new(AtomicUsize::new(0));
@@ -210,7 +217,7 @@ impl Client {
             addr,
             blocking: blocking.clone(),
             id,
-            quit_sender: Some(quit_sender),
+            quit_sender,
             reply_sender: reply_sender.clone(),
             name: None,
             db: db.clone(),
@@ -235,7 +242,7 @@ impl Client {
             next_request: None,
             db,
             id,
-            quit_receiver: Some(quit_receiver),
+            quit_receiver,
             name: None,
             store_sender,
             reply_sender,
@@ -344,15 +351,17 @@ impl Client {
 
     /// Stop processing requests and drop.
     pub fn quit(&mut self) {
-        if self.quit_receiver.take().is_some() {
+        if !self.is_quitting() {
+            self.quit_receiver.close();
             // No more replies after quitting.
             _ = self.reply_sender.send(ReplyMessage::Quit);
         }
     }
 
     /// Is this client currently quitting?
-    fn is_quitting(&self) -> bool {
-        self.quit_receiver.is_none()
+    fn is_quitting(&mut self) -> bool {
+        let result = self.quit_receiver.try_recv();
+        !matches!(result, Err(TryRecvError::Empty))
     }
 
     /// Is this client currently in resp2 PUBSUB mode?
@@ -533,13 +542,9 @@ impl Client {
 
     #[doc(hidden)]
     async fn wait_inner(mut self) {
-        let Some(mut quit) = self.quit_receiver.as_mut() else {
-            return;
-        };
-
         loop {
             select! {
-                _ = &mut quit => break,
+                _ = &mut self.quit_receiver => break,
                 message = self.requests.recv() => {
                     match message {
                         Some(RespRequest::Argument(argument)) => {

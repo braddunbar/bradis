@@ -44,11 +44,10 @@ impl Command for ClientClosedCommand {
             .get_mut(&index)
             .ok_or(TestError::MissingClient)?;
         let handle = Handle::current();
-        let value = handle
-            .block_on(timeout(TIMEOUT, client.reader.value()))
-            .map_err(TestError::from)?
-            .map_err(TestError::from)?;
-        let closed = value.is_none();
+        let Ok(value) = handle.block_on(timeout(TIMEOUT, client.reader.value())) else {
+            return Err(TestError::Timeout(call.span()).into());
+        };
+        let closed = value.map_err(TestError::from)?.is_none();
         drop(guard);
 
         Ok(PipelineData::Value(

@@ -1,5 +1,6 @@
-use crate::test::Test;
+use crate::test::{Test, TestError, TIMEOUT};
 use std::{str::from_utf8, sync::Mutex};
+use tokio::time::timeout;
 
 use nu_protocol::{
     engine::{Call, Command, EngineState, Stack},
@@ -243,8 +244,10 @@ impl Command for ReadValueCommand {
         let mut guard = self.0.lock().unwrap();
         let test = guard.as_mut().unwrap();
         let handle = Handle::current();
-        let value = handle.block_on(test.read_value())?;
-        let value = to_value(&value, call.span());
+        let Ok(value) = handle.block_on(timeout(TIMEOUT, test.read_value())) else {
+            return Err(TestError::Timeout(call.span()).into());
+        };
+        let value = to_value(&value?, call.span());
         drop(guard);
 
         Ok(PipelineData::Value(value, None))

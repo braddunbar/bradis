@@ -1,4 +1,4 @@
-use crate::test::{command::*, TestClient, TestError, TestResult, TIMEOUT};
+use crate::test::{command::*, TestClient, TestError, TestResult};
 use std::{env::current_dir, sync::Mutex};
 
 use bradis::{Addr, Server};
@@ -17,10 +17,7 @@ use nu_protocol::{
 use nu_std::load_standard_library;
 use respite::{RespValue, RespWriter};
 use thiserror::Error;
-use tokio::{
-    io::{duplex, DuplexStream, WriteHalf},
-    time::timeout,
-};
+use tokio::io::{duplex, DuplexStream, WriteHalf};
 use triomphe::Arc;
 
 impl From<TestError> for ShellError {
@@ -28,7 +25,10 @@ impl From<TestError> for ShellError {
         ShellError::GenericError {
             error: format!("{}", value),
             msg: format!("{}", value),
-            span: None,
+            span: match value {
+                TestError::Timeout(span) => Some(span),
+                _ => None,
+            },
             help: None,
             inner: Vec::new(),
         }
@@ -217,7 +217,6 @@ impl Test {
     pub async fn read_value(&mut self) -> TestResult<RespValue> {
         let reader = &mut self.client()?.reader;
         let value = reader.value();
-        let value = timeout(TIMEOUT, value).await?;
-        value?.ok_or(TestError::ReaderClosed)
+        value.await?.ok_or(TestError::ReaderClosed)
     }
 }

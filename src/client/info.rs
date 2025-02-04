@@ -2,7 +2,10 @@ use crate::{client::Addr, ClientId, Command, Reply, ReplyMessage, Store, StringV
 use bytes::BufMut;
 use std::{
     io::Write,
-    sync::atomic::{AtomicBool, AtomicIsize, AtomicPtr, AtomicU8, AtomicUsize, Ordering},
+    sync::{
+        atomic::{AtomicBool, AtomicIsize, AtomicPtr, AtomicU8, AtomicUsize, Ordering},
+        Mutex,
+    },
     time::Instant,
 };
 use tokio::sync::{mpsc, oneshot};
@@ -27,7 +30,7 @@ pub struct ClientInfo {
     pub id: ClientId,
 
     /// A channel for asking the client to quit
-    pub quit_sender: Option<oneshot::Sender<()>>,
+    pub quit_sender: Arc<Mutex<Option<oneshot::Sender<()>>>>,
 
     /// A channel for sending replies
     pub reply_sender: mpsc::UnboundedSender<ReplyMessage>,
@@ -68,11 +71,15 @@ impl ClientInfo {
 
     /// Ask the client to quit
     pub fn quit(&mut self) {
-        if let Some(quit) = self.quit_sender.take() {
-            _ = quit.send(());
-            // No more replies after quitting.
-            _ = self.reply_sender.send(ReplyMessage::Quit);
-        }
+        let Ok(mut quit) = self.quit_sender.lock() else {
+            return;
+        };
+        let Some(quit) = quit.take() else {
+            return;
+        };
+        _ = quit.send(());
+        // No more replies after quitting.
+        _ = self.reply_sender.send(ReplyMessage::Quit);
     }
 
     /// Send a reply to the client

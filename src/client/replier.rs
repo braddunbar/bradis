@@ -1,11 +1,15 @@
 use crate::{Reply, ReplyMessage};
 use respite::{RespError, RespWriter};
-use std::io::Write as IoWrite;
+use std::{io::Write as IoWrite, sync::Mutex};
 use thiserror::Error;
 use tokio::{
     io::{AsyncWrite, BufWriter},
-    sync::{mpsc, oneshot::error::RecvError},
+    sync::{
+        mpsc,
+        oneshot::{self, error::RecvError},
+    },
 };
+use triomphe::Arc;
 
 /// An error during writing replies
 #[derive(Debug, Error)]
@@ -36,11 +40,17 @@ pub struct Replier<W: AsyncWrite + Unpin> {
 
     /// A writer for sending bytes to the client
     writer: RespWriter<W>,
+
+    /// A oneshot sender to notify the client about errors.
+    quit_sender: Arc<Mutex<Option<oneshot::Sender<()>>>>,
 }
 
 impl<W: AsyncWrite + Unpin + Send + 'static> Replier<W> {
     /// Create a new Replier and wait for replies
-    pub fn spawn(writer: W) -> mpsc::UnboundedSender<ReplyMessage> {
+    pub fn spawn(
+        writer: W,
+        quit_sender: Arc<Mutex<Option<oneshot::Sender<()>>>>,
+    ) -> mpsc::UnboundedSender<ReplyMessage> {
         let (reply_sender, reply_receiver) = mpsc::unbounded_channel();
         let replier = Replier {
             buffer: Vec::new(),
@@ -48,17 +58,22 @@ impl<W: AsyncWrite + Unpin + Send + 'static> Replier<W> {
             quitting: false,
             reply_receiver,
             writer: RespWriter::new(BufWriter::new(writer)),
+            quit_sender,
         };
         tokio::spawn(replier.listen());
         reply_sender
     }
 
-    // TODO: Return a better error type…
     /// Listen for reply messages and handle them as quickly as possible.
     async fn listen(mut self) {
         if self.listen_inner().await.is_err() {
-            // TODO: Notify the client about the error…?
-            // TODO: Log something…?
+            let Ok(mut quit) = self.quit_sender.lock() else {
+                return;
+            };
+            let Some(quit) = quit.take() else {
+                return;
+            };
+            _ = quit.send(());
         }
     }
 
@@ -176,16 +191,36 @@ mod tests {
     use crate::ReplyError;
     use bytes::Bytes;
     use respite::RespVersion;
-    use std::str::from_utf8;
+    use std::{str::from_utf8, time::Duration};
     use tokio::{
         io::{duplex, AsyncReadExt},
         sync::oneshot,
+        time::timeout,
     };
+
+    #[tokio::test]
+    async fn notify_client_of_errors() -> Result<(), ReplierError> {
+        let (_, remote) = duplex(14);
+        let (quit_sender, quit_receiver) = oneshot::channel();
+        let (len_sender, len_receiver) = oneshot::channel();
+        let quit_sender = Arc::new(Mutex::new(Some(quit_sender)));
+
+        // Cause an error by dropping a deferred array reply.
+        let sender = Replier::spawn(remote, quit_sender);
+        _ = sender.send(ReplyMessage::Reply(Reply::DeferredArray(len_receiver)));
+        drop(len_sender);
+
+        let limit = Duration::from_millis(50);
+        timeout(limit, quit_receiver).await.unwrap()?;
+        Ok(())
+    }
 
     macro_rules! assert_replies {
         ($reply:expr, $output:expr, $version:expr) => {{
             let (mut local, remote) = duplex(2usize.pow(8));
-            let sender = Replier::spawn(remote);
+            let (quit_sender, _) = oneshot::channel();
+            let quit_sender = Arc::new(Mutex::new(Some(quit_sender)));
+            let sender = Replier::spawn(remote, quit_sender);
 
             _ = sender.send(ReplyMessage::Protocol($version));
             _ = sender.send(ReplyMessage::Reply($reply.into()));
