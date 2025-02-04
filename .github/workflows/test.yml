@@ -1,4 +1,6 @@
 on: [push]
+env:
+  CARGO_INCREMENTAL: 0
 jobs:
   check:
     name: Check
