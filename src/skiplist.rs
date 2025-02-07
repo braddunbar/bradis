@@ -1,6 +1,6 @@
 use crate::db::{Extreme, StringValue};
 use ordered_float::NotNan;
-use rand::{thread_rng, Rng};
+use rand::{rng, Rng};
 use seq_macro::seq;
 use std::{
     cmp::{Ordering, PartialOrd},
@@ -106,9 +106,9 @@ impl Node<[Lane]> {
     /// Create a new node with the correct number of lanes.
     pub fn new(score: NotNan<f64>, value: StringValue) -> Link {
         let mut level = 1;
-        let mut rng = thread_rng();
+        let mut rng = rng();
 
-        while level < MAX_LEVEL && rng.gen::<f64>() < P {
+        while level < MAX_LEVEL && rng.random::<f64>() < P {
             level += 1;
         }
 

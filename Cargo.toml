@@ -16,21 +16,21 @@ split-debuginfo = "unpacked"
 
 [dependencies]
 arrayvec = "0.7.6"
-bytes = "1.8.0"
+bytes = "1.10.0"
 hashbrown = "0.15.2"
 logos = "0.15.0"
-ordered-float = "4.4.0"
+ordered-float = "4.6.0"
 piccolo = "0.3.3"
-rand = "0.8.5"
+rand = "0.9.0"
 respite = "0.3.7"
 seq-macro = "0.3.5"
-thiserror = "1.0.65"
-tracing = "0.1.40"
-tracing-subscriber = "0.3.18"
+thiserror = "2.0.11"
+tracing = "0.1.41"
+tracing-subscriber = "0.3.19"
 triomphe = "0.1.14"
 
 [dependencies.tokio]
-version = "1.42.0"
+version = "1.43.0"
 features = [
   "macros",
   "rt-multi-thread",
@@ -39,13 +39,13 @@ features = [
 ]
 
 [dev-dependencies]
-miette = { version = "7.4.0", features = ["fancy"] }
-nu-cli = "0.101.0"
-nu-cmd-extra = "0.101.0"
-nu-cmd-lang = "0.101.0"
-nu-command = "0.101.0"
-nu-engine = "0.101.0"
-nu-parser = "0.101.0"
-nu-protocol = "0.101.0"
-nu-std = "0.101.0"
+miette = { version = "7.5.0", features = ["fancy"] }
+nu-cli = "0.102.0"
+nu-cmd-extra = "0.102.0"
+nu-cmd-lang = "0.102.0"
+nu-command = "0.102.0"
+nu-engine = "0.102.0"
+nu-parser = "0.102.0"
+nu-protocol = "0.102.0"
+nu-std = "0.102.0"
 proptest = "1.6.0"
