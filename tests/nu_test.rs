@@ -1,3 +1,5 @@
+#![cfg(feature = "tokio-runtime")]
+
 #[cfg(not(miri))]
 mod test;
 

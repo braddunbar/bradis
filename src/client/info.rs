@@ -6,10 +6,10 @@ use std::{
         atomic::{AtomicBool, AtomicIsize, AtomicPtr, AtomicU8, AtomicUsize, Ordering},
         Mutex,
     },
-    time::Instant,
 };
 use tokio::sync::{mpsc, oneshot};
 use triomphe::Arc;
+use web_time::Instant;
 
 /// Clients are not owned by the store, but the store needs accurate data in several cases.
 ///

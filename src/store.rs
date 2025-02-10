@@ -153,7 +153,7 @@ impl Store {
             reader_config: config.clone(),
         };
 
-        tokio::spawn(async move {
+        crate::spawn(async move {
             while let Some(message) = store_receiver.recv().await {
                 store.message(message);
             }

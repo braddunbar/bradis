@@ -18,6 +18,7 @@ mod reversible;
 mod server;
 mod skiplist;
 mod slice;
+mod spawn;
 mod store;
 mod time;
 
@@ -33,5 +34,9 @@ use db::{DBIndex, Set, StringValue};
 use pack::{Iter as PackIter, Pack, PackRef, PackValue, Packable};
 use reply::{BulkReply, Reply, ReplyError};
 use reversible::Reversible;
+use spawn::*;
 use store::{Store, StoreMessage};
 use time::epoch;
+
+#[cfg(not(feature = "tokio-runtime"))]
+pub use spawn::run_until_stalled;

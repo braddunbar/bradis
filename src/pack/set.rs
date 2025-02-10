@@ -69,8 +69,8 @@ impl PackSet {
             return None;
         }
 
-        let mut rng = rand::rng();
-        let index = rng.random_range(0..self.len());
+        let mut rng = rand::thread_rng();
+        let index = rng.gen_range(0..self.len());
         let mut cursor = self.pack.cursor(Edge::Left);
         cursor.skip(index);
         let result = cursor.peek().map(|element| element.to_owned());

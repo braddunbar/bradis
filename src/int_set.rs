@@ -169,8 +169,8 @@ impl IntSet {
             return None;
         }
 
-        let mut rng = rand::rng();
-        let index = rng.random_range(0..self.len());
+        let mut rng = rand::thread_rng();
+        let index = rng.gen_range(0..self.len());
 
         use IntSet::*;
         let result = match self {

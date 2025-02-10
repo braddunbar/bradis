@@ -1,4 +1,4 @@
-use std::time::{Duration, UNIX_EPOCH};
+use web_time::{Duration, UNIX_EPOCH};
 
 pub fn epoch() -> Duration {
     UNIX_EPOCH

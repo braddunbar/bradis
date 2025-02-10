@@ -21,7 +21,7 @@ impl From<Value> for DropMessage {
 
 pub fn spawn() -> mpsc::UnboundedSender<DropMessage> {
     let (sender, mut receiver) = mpsc::unbounded_channel();
-    tokio::spawn(async move {
+    crate::spawn(async move {
         while let Some(message) = receiver.recv().await {
             drop(message);
         }

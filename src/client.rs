@@ -12,7 +12,7 @@ pub use reply_message::ReplyMessage;
 
 use crate::{
     epoch, request::Request, BlockResult, BulkReply, Command, DBIndex, Reply, ReplyError, Store,
-    StoreMessage, StringValue,
+    StoreMessage, StringValue, TaskHandle,
 };
 use bytes::Bytes;
 use respite::{RespConfig, RespReader, RespRequest, RespVersion};
@@ -24,7 +24,6 @@ use std::{
         atomic::{AtomicBool, AtomicIsize, AtomicPtr, AtomicU8, AtomicUsize, Ordering},
         Mutex,
     },
-    time::{Duration, Instant},
 };
 use tokio::{
     io::{AsyncRead, AsyncWrite},
@@ -33,9 +32,12 @@ use tokio::{
         mpsc,
         oneshot::{self, error::TryRecvError},
     },
-    task::JoinHandle,
 };
 use triomphe::Arc;
+use web_time::{Duration, Instant};
+
+#[cfg(feature = "tokio-runtime")]
+use tokio::task::JoinHandle;
 
 pub enum Argument {
     Push(Bytes),
@@ -57,6 +59,7 @@ pub enum ReplyMode {
 
 /// The current timeout task
 #[derive(Debug)]
+#[cfg(feature = "tokio-runtime")]
 struct Timeout {
     /// Has this timeout been canceled?
     canceled: Arc<AtomicBool>,
@@ -65,6 +68,7 @@ struct Timeout {
     task: JoinHandle<()>,
 }
 
+#[cfg(feature = "tokio-runtime")]
 impl Timeout {
     /// Abort the task and mark this timeout as canceled to skip an existing message.
     fn cancel(&mut self) {
@@ -167,8 +171,9 @@ pub struct Client {
     last_command: Arc<AtomicPtr<Command>>,
 
     /// The reader task
-    reader_task: JoinHandle<()>,
+    reader_task: TaskHandle<()>,
 
+    #[cfg(feature = "tokio-runtime")]
     /// The current timeout
     timeout: Option<Timeout>,
 }
@@ -189,7 +194,7 @@ impl Client {
 
         // Spawn the reader
         let mut reader = RespReader::new(reader, config);
-        let reader_task = tokio::spawn(async move {
+        let reader_task = crate::spawn_with_handle(async move {
             reader
                 .requests(|request| {
                     _ = request_sender.send(request);
@@ -262,6 +267,7 @@ impl Client {
             resp,
             monitor,
             reader_task,
+            #[cfg(feature = "tokio-runtime")]
             timeout: None,
         };
 
@@ -537,7 +543,7 @@ impl Client {
     /// * The timeout for a blocking operation expires.
     /// * Receive a request or error from the arguments task.
     pub fn wait(self) {
-        tokio::spawn(self.wait_inner());
+        crate::spawn(self.wait_inner());
     }
 
     #[doc(hidden)]
@@ -566,6 +572,13 @@ impl Client {
         }
     }
 
+    #[cfg(not(feature = "tokio-runtime"))]
+    /// Mark this client as blocked and spawn a timeout if necessary.
+    pub fn block(&mut self, _timeout: Duration) {
+        self.blocking.store(true, Ordering::Relaxed);
+    }
+
+    #[cfg(feature = "tokio-runtime")]
     /// Mark this client as blocked and spawn a timeout if necessary.
     pub fn block(&mut self, timeout: Duration) {
         self.blocking.store(true, Ordering::Relaxed);
@@ -597,6 +610,7 @@ impl Client {
     pub fn unblock(&mut self) {
         self.request.clear();
         self.blocking.store(false, Ordering::Relaxed);
+        #[cfg(feature = "tokio-runtime")]
         if let Some(mut timeout) = self.timeout.take() {
             timeout.cancel();
         }

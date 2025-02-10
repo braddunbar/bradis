@@ -17,25 +17,32 @@ split-debuginfo = "unpacked"
 [dependencies]
 arrayvec = "0.7"
 bytes = "1.10"
+futures = "0.3"
 hashbrown = "0.15"
 logos = "0.15"
 ordered-float = "4"
 piccolo = "0.3"
-rand = "0.9"
-respite = "0.3"
+rand = "0.8"
+respite = "0.3.9"
 seq-macro = "0.3"
 thiserror = "2"
 tracing = "0.1"
 tracing-subscriber = "0.3"
 triomphe = "0.1"
+web-time = "1.1.0"
+
+[features]
+default = ["tokio-runtime"]
+tokio-runtime = [
+  "tokio/rt-multi-thread",
+  "tokio/time",
+]
 
 [dependencies.tokio]
 version = "1.43"
 features = [
   "macros",
-  "rt-multi-thread",
   "sync",
-  "time",
 ]
 
 [dev-dependencies]

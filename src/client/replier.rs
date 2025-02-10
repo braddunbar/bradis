@@ -60,7 +60,7 @@ impl<W: AsyncWrite + Unpin + Send + 'static> Replier<W> {
             writer: RespWriter::new(BufWriter::new(writer)),
             quit_sender,
         };
-        tokio::spawn(replier.listen());
+        crate::spawn(replier.listen());
         reply_sender
     }
 
@@ -186,6 +186,7 @@ impl<W: AsyncWrite + Unpin + Send + 'static> Replier<W> {
 
 #[cfg(test)]
 #[cfg(not(miri))]
+#[cfg(feature = "tokio-runtime")]
 mod tests {
     use super::*;
     use crate::ReplyError;
