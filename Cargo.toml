@@ -39,7 +39,7 @@ tokio-runtime = [
 ]
 
 [dependencies.tokio]
-version = "1.43"
+version = "1"
 features = [
   "macros",
   "sync",
