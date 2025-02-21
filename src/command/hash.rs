@@ -1,11 +1,11 @@
 use crate::{
+    CommandResult,
     buffer::ArrayBuffer,
     client::Client,
     command::{Arity, Command, CommandKind, Keys},
     db::Hash,
     reply::Reply,
     store::Store,
-    CommandResult,
 };
 
 pub static HDEL: Command = Command {

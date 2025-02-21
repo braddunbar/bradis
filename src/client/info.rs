@@ -1,10 +1,10 @@
-use crate::{client::Addr, ClientId, Command, Reply, ReplyMessage, Store, StringValue};
+use crate::{ClientId, Command, Reply, ReplyMessage, Store, StringValue, client::Addr};
 use bytes::BufMut;
 use std::{
     io::Write,
     sync::{
-        atomic::{AtomicBool, AtomicIsize, AtomicPtr, AtomicU8, AtomicUsize, Ordering},
         Mutex,
+        atomic::{AtomicBool, AtomicIsize, AtomicPtr, AtomicU8, AtomicUsize, Ordering},
     },
 };
 use tokio::sync::{mpsc, oneshot};

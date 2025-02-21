@@ -194,7 +194,7 @@ mod tests {
     use respite::RespVersion;
     use std::{str::from_utf8, time::Duration};
     use tokio::{
-        io::{duplex, AsyncReadExt},
+        io::{AsyncReadExt, duplex},
         sync::oneshot,
         time::timeout,
     };
@@ -242,15 +242,11 @@ mod tests {
     }
 
     macro_rules! assert_v2 {
-        ($reply:expr, $output:expr) => {{
-            assert_replies!($reply, $output, RespVersion::V2)
-        }};
+        ($reply:expr, $output:expr) => {{ assert_replies!($reply, $output, RespVersion::V2) }};
     }
 
     macro_rules! assert_v3 {
-        ($reply:expr, $output:expr) => {{
-            assert_replies!($reply, $output, RespVersion::V3)
-        }};
+        ($reply:expr, $output:expr) => {{ assert_replies!($reply, $output, RespVersion::V3) }};
     }
 
     #[tokio::test]

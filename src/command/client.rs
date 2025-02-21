@@ -1,13 +1,13 @@
 use crate::{
+    CommandResult, VERSION,
     bytes::lex,
     client::{Argument, Client, ClientId, ReplyMode, Tx},
-    command::{Arity, Command, CommandKind, Keys, ALL},
+    command::{ALL, Arity, Command, CommandKind, Keys},
     config::YesNoOption,
     db::DBIndex,
     epoch, glob,
     reply::{Reply, ReplyError},
     store::{Monitor, Store},
-    CommandResult, VERSION,
 };
 use bytes::Bytes;
 use logos::Logos;

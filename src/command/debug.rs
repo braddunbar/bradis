@@ -1,9 +1,9 @@
 use crate::{
+    CommandResult,
     bytes::lex,
     client::Client,
     command::{Arity, Command, CommandKind, Keys},
     store::Store,
-    CommandResult,
 };
 use logos::Logos;
 

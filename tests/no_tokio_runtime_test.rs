@@ -1,6 +1,6 @@
 #![cfg(not(feature = "tokio-runtime"))]
 
-use bradis::{run_until_stalled, Server};
+use bradis::{Server, run_until_stalled};
 use futures::executor::block_on;
 use respite::{RespReader, RespWriter};
 use tokio::io::{duplex, split};

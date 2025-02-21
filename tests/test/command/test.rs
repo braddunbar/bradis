@@ -1,10 +1,10 @@
 use crate::test::Test;
 use std::sync::Mutex;
 
-use nu_engine::{get_eval_block, CallExt};
+use nu_engine::{CallExt, get_eval_block};
 use nu_protocol::{
-    engine::{Call, Closure, Command, EngineState, Stack},
     Category, PipelineData, ShellError, Signature, SyntaxShape, Type,
+    engine::{Call, Closure, Command, EngineState, Stack},
 };
 use tokio::runtime::Handle;
 use triomphe::Arc;

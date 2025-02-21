@@ -1,10 +1,10 @@
-use crate::test::{Test, TestError, TIMEOUT};
+use crate::test::{TIMEOUT, Test, TestError};
 use std::sync::Mutex;
 
 use nu_engine::CallExt;
 use nu_protocol::{
-    engine::{Call, Command, EngineState, Stack},
     Category, PipelineData, ShellError, Signature, SyntaxShape, Type, Value,
+    engine::{Call, Command, EngineState, Stack},
 };
 use tokio::{runtime::Handle, time::timeout};
 use triomphe::Arc;

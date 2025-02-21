@@ -1,10 +1,10 @@
-use crate::test::{Test, TestError, TIMEOUT};
+use crate::test::{TIMEOUT, Test, TestError};
 use std::{str::from_utf8, sync::Mutex};
 use tokio::time::timeout;
 
 use nu_protocol::{
-    engine::{Call, Command, EngineState, Stack},
     Category, PipelineData, Record, ShellError, Signature, Span, Type, Value,
+    engine::{Call, Command, EngineState, Stack},
 };
 use respite::{RespPrimitive, RespValue};
 use tokio::runtime::Handle;

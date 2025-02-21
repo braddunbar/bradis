@@ -6,7 +6,7 @@ use std::{
     cmp::{Ordering, PartialOrd},
     marker::PhantomData,
     ops::{Bound, Range, RangeBounds},
-    ptr::{null_mut, NonNull},
+    ptr::{NonNull, null_mut},
 };
 
 /// The maximum number of levels in a node.
@@ -108,7 +108,7 @@ impl Node<[Lane]> {
         let mut level = 1;
         let mut rng = rand::thread_rng();
 
-        while level < MAX_LEVEL && rng.gen::<f64>() < P {
+        while level < MAX_LEVEL && rng.r#gen::<f64>() < P {
             level += 1;
         }
 

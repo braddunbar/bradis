@@ -4,7 +4,7 @@ use crate::{
     linked_hash_set::LinkedHashSet,
     pubsub::Subscriber,
 };
-use hashbrown::{hash_map::EntryRef, HashMap, HashSet};
+use hashbrown::{HashMap, HashSet, hash_map::EntryRef};
 
 macro_rules! remove {
     ($map:expr, $key:expr, $value:expr) => {{

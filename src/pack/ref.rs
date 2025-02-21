@@ -1,6 +1,6 @@
 use crate::{
     buffer::Buffer,
-    bytes::{parse, parse_i64_exact, Output},
+    bytes::{Output, parse, parse_i64_exact},
     db::{Raw, RawSliceRef},
     pack::{PackValue, Packable},
 };

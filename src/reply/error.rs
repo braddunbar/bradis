@@ -1,7 +1,7 @@
 use crate::{
+    Command,
     bytes::{AsciiUpper, Output},
     config::{Config, ConfigError},
-    Command,
 };
 use bytes::Bytes;
 use respite::RespError;
@@ -72,7 +72,9 @@ pub enum ReplyError {
     #[error("ERR Invalid argument(s)")]
     InvalidArgument,
 
-    #[error("ERR Invalid bitfield type. Use something like i16 u8. Note that u64 is not supported but i64 is.")]
+    #[error(
+        "ERR Invalid bitfield type. Use something like i16 u8. Note that u64 is not supported but i64 is."
+    )]
     InvalidBitfield,
 
     #[error("ERR Invalid client ID")]

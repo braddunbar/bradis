@@ -1,9 +1,9 @@
 use crate::{
+    CommandResult,
     client::Client,
     command::{Arity, Command, CommandKind, Keys},
     reply::{Reply, ReplyError},
     store::Store,
-    CommandResult,
 };
 use std::cmp::min;
 

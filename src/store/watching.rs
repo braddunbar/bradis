@@ -5,8 +5,8 @@ use crate::{
     store::DATABASES,
 };
 use hashbrown::{
-    hash_map::{Entry, EntryRef},
     HashMap, HashSet,
+    hash_map::{Entry, EntryRef},
 };
 
 /// Keep track of which clients are watching which keys and which keys are dirty.

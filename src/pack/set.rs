@@ -1,4 +1,4 @@
-use crate::{db::Edge, Pack, PackIter, PackValue, Packable};
+use crate::{Pack, PackIter, PackValue, Packable, db::Edge};
 use rand::Rng;
 
 /// A Redis set, stored in a [`Pack`] to improve memory usage and locality.

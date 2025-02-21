@@ -1,8 +1,9 @@
 use crate::{
+    Client, CommandResult, ReplyError, Store,
     bytes::lex,
     command::{Arity, Command, CommandKind, Keys},
     config::*,
-    glob, Client, CommandResult, ReplyError, Store,
+    glob,
 };
 use logos::Logos;
 

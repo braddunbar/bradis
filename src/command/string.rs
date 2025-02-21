@@ -1,4 +1,5 @@
 use crate::{
+    CommandResult,
     buffer::ArrayBuffer,
     bytes::lex,
     client::Client,
@@ -7,7 +8,6 @@ use crate::{
     reply::{Reply, ReplyError},
     slice::slice,
     store::Store,
-    CommandResult,
 };
 use bytes::Bytes;
 use logos::Logos;

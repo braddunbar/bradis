@@ -1,10 +1,13 @@
 use crate::{
+    Pack, PackIter, PackRef, PackValue, Packable,
     buffer::ArrayBuffer,
     db::{Edge, Extreme, Insertion},
-    Pack, PackIter, PackRef, PackValue, Packable,
 };
 use ordered_float::NotNan;
-use std::ops::{Range, RangeBounds};
+use std::{
+    iter::Rev,
+    ops::{Range, RangeBounds},
+};
 
 /// A sorted set value, stored in a [`Pack`] to improve memory usage and locality. Score value
 /// pairs are stored in a alternating pattern, scores first.
@@ -73,7 +76,7 @@ impl PackSortedSet {
     }
 
     /// Return a reverse iterator over the values with scores within `bounds`.
-    pub fn rev_range_score<R>(&self, bounds: &R) -> impl ExactSizeIterator<Item = (f64, PackRef)>
+    pub fn rev_range_score<R>(&self, bounds: &R) -> Rev<Iter>
     where
         R: RangeBounds<f64>,
     {

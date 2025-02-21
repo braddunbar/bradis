@@ -8,7 +8,7 @@ mod string_slice;
 
 pub use array_string::ArrayString;
 pub use hash::{Hash, HashKey, HashValue};
-pub use list::{list_is_valid, List};
+pub use list::{List, list_is_valid};
 pub use set::{Set, SetRef, SetValue};
 pub use sorted_set::{Insertion, SortedSet, SortedSetRef, SortedSetValue};
 pub use string::StringValue;
@@ -172,10 +172,10 @@ impl Value {
     /// How much effort is required to drop this value?
     pub fn drop_effort(&self) -> usize {
         match self {
-            Value::Hash(ref hash) => hash.drop_effort(),
-            Value::List(ref list) => list.drop_effort(),
-            Value::Set(ref set) => set.drop_effort(),
-            Value::SortedSet(ref set) => set.drop_effort(),
+            Value::Hash(hash) => hash.drop_effort(),
+            Value::List(list) => list.drop_effort(),
+            Value::Set(set) => set.drop_effort(),
+            Value::SortedSet(set) => set.drop_effort(),
             Value::String(_) => 1,
         }
     }

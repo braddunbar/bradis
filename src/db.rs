@@ -7,13 +7,13 @@ pub use index::DBIndex;
 pub use key_ref::KeyRef;
 pub use raw::{Raw, RawSlice, RawSliceRef};
 pub use value::{
-    list_is_valid, ArrayString, Edge, Extreme, Hash, HashKey, HashValue, Insertion, List, Set,
-    SetRef, SetValue, SortedSet, SortedSetRef, SortedSetValue, StringSlice, StringValue, Value,
-    ValueError,
+    ArrayString, Edge, Extreme, Hash, HashKey, HashValue, Insertion, List, Set, SetRef, SetValue,
+    SortedSet, SortedSetRef, SortedSetValue, StringSlice, StringValue, Value, ValueError,
+    list_is_valid,
 };
 
 use crate::epoch;
-use hashbrown::{hash_map::EntryRef, DefaultHashBuilder, HashMap};
+use hashbrown::{DefaultHashBuilder, HashMap, hash_map::EntryRef};
 
 /// A Redis database, storing all the values and their expiration times.
 #[derive(Debug, Clone)]
@@ -140,11 +140,7 @@ impl DB {
                 None
             }
         };
-        if expired {
-            None
-        } else {
-            value
-        }
+        if expired { None } else { value }
     }
 
     /// Set the `value` of `key`, removing the expiration time.
@@ -199,11 +195,7 @@ impl DB {
         let expired = self.is_expired(key);
         self.persist(key);
         let value = self.objects.remove(key);
-        if expired {
-            None
-        } else {
-            value
-        }
+        if expired { None } else { value }
     }
 
     /// Return the time until `key` expires in milliseconds.

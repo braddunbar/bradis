@@ -3,8 +3,8 @@ use std::sync::Mutex;
 
 use nu_engine::CallExt;
 use nu_protocol::{
-    engine::{Call, Command, EngineState, Stack},
     Category, PipelineData, ShellError, Signature, SyntaxShape, Type, Value,
+    engine::{Call, Command, EngineState, Stack},
 };
 use tokio::runtime::Handle;
 use triomphe::Arc;

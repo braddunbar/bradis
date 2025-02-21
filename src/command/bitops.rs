@@ -1,9 +1,9 @@
 use crate::{
+    Client, CommandResult, Reply, ReplyError, Store,
     buffer::ArrayBuffer,
     bytes::{lex, parse},
     command::{Arity, Command, CommandKind, Keys},
     slice::slice,
-    Client, CommandResult, Reply, ReplyError, Store,
 };
 use logos::Logos;
 use std::{
@@ -754,7 +754,7 @@ fn bitpos(client: &mut Client, store: &mut Store) -> CommandResult {
     let first = if range.start % 8 == 0 {
         first
     } else if bit {
-        first & !0 >> (range.start % 8)
+        first & (!0 >> (range.start % 8))
     } else {
         first | !(!0 >> (range.start % 8))
     };

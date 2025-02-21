@@ -1,9 +1,9 @@
 use crate::{
-    db::{list_is_valid, Edge},
+    PackIter,
+    db::{Edge, list_is_valid},
     linked_list::{Iter as LinkedListIter, LinkedList},
     pack::{PackList, PackListInsert, PackRef, Packable},
     reversible::Reversible,
-    PackIter,
 };
 
 /// Redis lists are stored as a linked list of packed lists.

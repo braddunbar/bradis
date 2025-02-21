@@ -1,10 +1,10 @@
 use crate::{
+    CommandResult,
     bytes::lex,
     client::Client,
     command::{Arity, Command, CommandKind, Keys},
     reply::ReplyError,
     store::Store,
-    CommandResult,
 };
 use logos::Logos;
 use std::mem;

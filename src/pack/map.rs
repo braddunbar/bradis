@@ -1,4 +1,4 @@
-use crate::{db::Edge, Pack, PackIter, PackRef, Packable};
+use crate::{Pack, PackIter, PackRef, Packable, db::Edge};
 
 /// A Redis map, stored in a [`Pack`] to improve memory usage and locality. Keys and values are
 /// stored in an alternating pattern, key first.

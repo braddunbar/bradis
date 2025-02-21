@@ -1,11 +1,11 @@
 use crate::{
+    CommandResult,
     bytes::lex,
     client::Client,
     command::{Arity, Command, CommandKind, Keys},
     epoch,
     reply::Reply,
     store::Store,
-    CommandResult,
 };
 use bytes::Bytes;
 use logos::Logos;

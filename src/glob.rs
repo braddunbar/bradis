@@ -39,11 +39,7 @@ where
             }
         }
 
-        if not ^ matched {
-            Some(pattern)
-        } else {
-            None
-        }
+        if not ^ matched { Some(pattern) } else { None }
     };
 
     let mut state = (pattern, string);

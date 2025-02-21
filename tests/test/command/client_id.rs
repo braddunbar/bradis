@@ -1,7 +1,7 @@
 use crate::test::Test;
 use nu_protocol::{
-    engine::{Call, Command, EngineState, Stack},
     Category, PipelineData, ShellError, Signature, Type, Value,
+    engine::{Call, Command, EngineState, Stack},
 };
 use std::sync::Mutex;
 use triomphe::Arc;

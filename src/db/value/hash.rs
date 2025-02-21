@@ -4,7 +4,7 @@ use crate::{
     pack::{PackMap, PackRef, Packable},
     reply::ReplyError,
 };
-use hashbrown::{hash_map::EntryRef, HashMap};
+use hashbrown::{HashMap, hash_map::EntryRef};
 
 /// A reference to a hash key.
 #[derive(Debug)]

@@ -1,4 +1,5 @@
 use crate::{
+    BlockResult, CommandResult,
     bytes::{lex, parse},
     client::Client,
     command::{Arity, Command, CommandKind, Edge, Keys},
@@ -7,7 +8,6 @@ use crate::{
     reply::{Reply, ReplyError},
     slice::slice,
     store::Store,
-    BlockResult, CommandResult,
 };
 use logos::Logos;
 use std::{cmp::min, time::Duration};

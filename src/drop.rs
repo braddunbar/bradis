@@ -1,4 +1,4 @@
-use crate::db::{Value, DB};
+use crate::db::{DB, Value};
 use tokio::sync::mpsc;
 
 #[derive(Debug)]

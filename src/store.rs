@@ -3,17 +3,17 @@ mod monitor;
 mod watching;
 
 use crate::{
+    BlockResult,
     client::{Client, ClientId, ClientInfo},
-    db::{DBIndex, KeyRef, StringValue, Value, DB},
+    db::{DB, DBIndex, KeyRef, StringValue, Value},
     drop::{self, DropMessage},
     linked_hash_set::LinkedHashSet,
     pubsub::Pubsub,
     reply::{Reply, ReplyError},
-    BlockResult,
 };
 use blocking::Blocking;
 use bytes::Bytes;
-use hashbrown::{hash_map::Entry, HashMap};
+use hashbrown::{HashMap, hash_map::Entry};
 pub use monitor::Monitor;
 use respite::RespConfig;
 use std::sync::atomic::{AtomicBool, Ordering};

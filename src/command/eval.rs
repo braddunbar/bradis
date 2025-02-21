@@ -1,6 +1,6 @@
 use crate::{
-    command::{Arity, Command, CommandKind, Keys},
     Client, CommandResult, Reply, Store,
+    command::{Arity, Command, CommandKind, Keys},
 };
 use piccolo::{Closure, Executor, Lua};
 

@@ -1,12 +1,12 @@
 use crate::{
+    PackIter,
     bytes::parse_i64_exact,
     db::{KeyRef, StringValue},
     int_set::{IntSet, Iter as IntSetIter},
     pack::{PackRef, PackSet, PackValue, Packable},
     store::SetConfig,
-    PackIter,
 };
-use hashbrown::{hash_set::Iter as HashSetIter, HashSet};
+use hashbrown::{HashSet, hash_set::Iter as HashSetIter};
 
 /// A reference to a [`Set`] value.
 pub enum SetRef<'a> {

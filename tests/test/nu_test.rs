@@ -1,4 +1,4 @@
-use crate::test::{command::*, TestClient, TestError, TestResult};
+use crate::test::{TestClient, TestError, TestResult, command::*};
 use std::{env::current_dir, sync::Mutex};
 
 use bradis::{Addr, Server};
@@ -10,14 +10,14 @@ use nu_command::add_shell_command_context;
 use nu_engine::eval_block;
 use nu_parser::parse;
 use nu_protocol::{
+    CompileError, ParseError, PipelineData, ShellError,
     debugger::WithoutDebug,
     engine::{EngineState, Stack, StateWorkingSet, VirtualPath},
-    CompileError, ParseError, PipelineData, ShellError,
 };
 use nu_std::load_standard_library;
 use respite::{RespValue, RespWriter};
 use thiserror::Error;
-use tokio::io::{duplex, DuplexStream, WriteHalf};
+use tokio::io::{DuplexStream, WriteHalf, duplex};
 use triomphe::Arc;
 
 impl From<TestError> for ShellError {

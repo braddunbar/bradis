@@ -1,7 +1,7 @@
 use crate::{
+    PackRef, PackValue,
     buffer::{ArrayBuffer, Buffer},
     bytes::parse_i64_exact,
-    PackRef, PackValue,
 };
 use bytes::{BufMut, Bytes};
 

@@ -5,7 +5,7 @@ mod nu_test;
 
 pub use client::TestClient;
 pub use error::{TestError, TestResult};
-pub use nu_test::{run, Test};
+pub use nu_test::{Test, run};
 use std::time::Duration;
 
 /// How long do we wait before a test times out?

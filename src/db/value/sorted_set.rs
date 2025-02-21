@@ -3,7 +3,7 @@ use crate::{
     pack::{PackRef, PackSortedSet, PackValue, Packable},
     skiplist::Skiplist,
 };
-use hashbrown::{hash_map::EntryRef, HashMap};
+use hashbrown::{HashMap, hash_map::EntryRef};
 use ordered_float::NotNan;
 use std::ops::{Range, RangeBounds};
 

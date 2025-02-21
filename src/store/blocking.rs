@@ -6,8 +6,8 @@ use crate::{
     store::DATABASES,
 };
 use hashbrown::{
-    hash_map::{Entry, EntryRef},
     HashMap, HashSet,
+    hash_map::{Entry, EntryRef},
 };
 use std::{iter::StepBy, ops::Range};
 

@@ -1,6 +1,6 @@
 use crate::{
-    db::{list_is_valid, Edge},
     Pack, PackIter, PackRef, Packable, Reversible,
+    db::{Edge, list_is_valid},
 };
 
 /// A redis list, stored as a [`Pack`] of values to improve memory usage and locality.
