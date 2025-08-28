@@ -44,7 +44,7 @@ export def info [key: string] {
   run info
   read-string |
   lines |
-  filter { str starts-with $"($key):" } |
+  where { str starts-with $"($key):" } |
   split row -n 2 ":" |
   get 1
 }
@@ -67,7 +67,7 @@ export def "client info" [index: int key: string] {
   run client list id $id
   read-string |
   split row " " |
-  filter { str starts-with $"($key)=" } |
+  where { str starts-with $"($key)=" } |
   split row -n 2 "=" |
   get 1
 }
