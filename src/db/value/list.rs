@@ -50,7 +50,7 @@ impl List {
     }
 
     /// Peek at the value on `edge` end of the list.
-    pub fn peek(&self, edge: Edge) -> Option<PackRef> {
+    pub fn peek<'a>(&'a self, edge: Edge) -> Option<PackRef<'a>> {
         match self {
             List::Pack(list) => list.peek(edge),
             List::Quick(list) => list.peek(edge),

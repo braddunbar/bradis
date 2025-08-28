@@ -35,7 +35,7 @@ impl PackMap {
     }
 
     /// Get the value for a `key`.
-    pub fn get<K>(&self, key: &K) -> Option<PackRef>
+    pub fn get<'a, K>(&'a self, key: &K) -> Option<PackRef<'a>>
     where
         K: Packable,
     {
@@ -82,17 +82,17 @@ impl PackMap {
     }
 
     /// Return an iterator over each key value pair in this map.
-    pub fn iter(&self) -> Iter {
+    pub fn iter<'a>(&'a self) -> Iter<'a> {
         Iter(self.pack.iter())
     }
 
     /// Return an iterator over the keys in this map.
-    pub fn keys(&self) -> impl Iterator<Item = PackRef> + '_ {
+    pub fn keys<'a>(&'a self) -> impl Iterator<Item = PackRef<'a>> {
         self.pack.iter().step_by(2)
     }
 
     /// Return an iterator over the values in this map.
-    pub fn values(&self) -> impl Iterator<Item = PackRef> + '_ {
+    pub fn values<'a>(&'a self) -> impl Iterator<Item = PackRef<'a>> {
         self.pack.iter().skip(1).step_by(2)
     }
 }

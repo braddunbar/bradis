@@ -106,7 +106,7 @@ impl Pack {
 
     /// Read one value, starting at `offset`, and return it along with the offset of the next
     /// value, or `None` if `offset` is the end of the pack.
-    fn read(&self, offset: usize) -> Option<(PackRef, usize)> {
+    fn read<'a>(&'a self, offset: usize) -> Option<(PackRef<'a>, usize)> {
         use PackRef::*;
         let mut all = self.data.get(offset..)?;
 
@@ -173,7 +173,7 @@ impl Pack {
 
     /// Read one value, starting from the offset of the following value, and return it along with
     /// its offset, or `None` if `offset` is the beginning of the pack.
-    fn read_rev(&self, mut offset: usize) -> Option<(PackRef, usize)> {
+    fn read_rev<'a>(&'a self, mut offset: usize) -> Option<(PackRef<'a>, usize)> {
         if offset == 0 {
             return None;
         }
@@ -193,7 +193,7 @@ impl Pack {
     }
 
     /// An iterator over the values in the pack.
-    pub fn iter(&self) -> Iter {
+    pub fn iter<'a>(&'a self) -> Iter<'a> {
         Iter {
             pack: self,
             next_front: 0,

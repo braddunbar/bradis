@@ -83,7 +83,7 @@ impl QuickList {
     }
 
     /// Return a reference to the element at the `edge` end of the list.
-    pub fn peek(&self, edge: Edge) -> Option<PackRef> {
+    pub fn peek<'a>(&'a self, edge: Edge) -> Option<PackRef<'a>> {
         self.list.edge(edge).and_then(|pack| pack.peek(edge))
     }
 
@@ -123,7 +123,7 @@ impl QuickList {
         }
     }
 
-    pub fn iter(&self) -> Iter {
+    pub fn iter<'a>(&'a self) -> Iter<'a> {
         Iter {
             iter: self.list.iter(),
             front: None,
@@ -132,7 +132,7 @@ impl QuickList {
     }
 
     /// Return an iterator over the elements in the list.
-    pub fn iter_from(&self, edge: Edge) -> Reversible<Iter> {
+    pub fn iter_from<'a>(&'a self, edge: Edge) -> Reversible<Iter<'a>> {
         match edge {
             Edge::Left => Reversible::Forward(self.iter()),
             Edge::Right => Reversible::Reverse(self.iter().rev()),

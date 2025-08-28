@@ -539,31 +539,31 @@ impl Skiplist {
     }
 
     /// Return an iterator over the elements in the list.
-    pub fn iter(&self) -> Iter {
+    pub fn iter<'a>(&'a self) -> Iter<'a> {
         Iter::new(self.head[0].next, self.len())
     }
 
     /// Return a reverse iterator over the elements in the list.
-    pub fn iter_rev(&self) -> Iter {
+    pub fn iter_rev<'a>(&'a self) -> Iter<'a> {
         Iter::rev(self.tail, self.len())
     }
 
     /// Return an iterator over all elements in `range`.
-    pub fn range(&self, range: Range<usize>) -> Iter {
+    pub fn range<'a>(&'a self, range: Range<usize>) -> Iter<'a> {
         let end = std::cmp::min(range.end, self.len);
         let len = end.saturating_sub(range.start);
         Iter::new(self.nth(range.start), len)
     }
 
     /// Return a reverse iterator over all elements in `range`.
-    pub fn rev_range(&self, range: Range<usize>) -> Iter {
+    pub fn rev_range<'a>(&'a self, range: Range<usize>) -> Iter<'a> {
         let end = std::cmp::min(range.end, self.len);
         let len = end.saturating_sub(range.start);
         Iter::rev(self.nth(range.end.saturating_sub(1)), len)
     }
 
     /// Return an iterator over all elements in `bounds`.
-    pub fn range_score<R>(&self, bounds: &R) -> Iter
+    pub fn range_score<'a, R>(&'a self, bounds: &R) -> Iter<'a>
     where
         R: RangeBounds<f64>,
     {
@@ -576,7 +576,7 @@ impl Skiplist {
     }
 
     /// Return a reverse iterator over all elements in `bounds`.
-    pub fn rev_range_score<R>(&self, bounds: &R) -> Iter
+    pub fn rev_range_score<'a, R>(&'a self, bounds: &R) -> Iter<'a>
     where
         R: RangeBounds<f64>,
     {

@@ -82,7 +82,7 @@ impl Hash {
     }
 
     /// Get the value for `key`.
-    pub fn get<'a, Q>(&self, key: &'a Q) -> Option<HashValue>
+    pub fn get<'a, Q>(&'a self, key: &'a Q) -> Option<HashValue<'a>>
     where
         Q: KeyRef<StringValue> + ?Sized + 'a,
         &'a Q: Packable,
@@ -257,7 +257,7 @@ impl Hash {
     }
 
     /// Return an iterator over the key value pairs.
-    pub fn iter(&self) -> impl Iterator<Item = (HashKey, HashValue)> + '_ {
+    pub fn iter<'a>(&'a self) -> impl Iterator<Item = (HashKey<'a>, HashValue<'a>)> {
         match self {
             Hash::HashMap(map) => Iter::HashMap(map.iter()),
             Hash::PackMap(map) => Iter::PackMap(map.iter()),
@@ -265,7 +265,7 @@ impl Hash {
     }
 
     /// Return an iterator over the keys.
-    pub fn keys(&self) -> impl Iterator<Item = HashKey> + '_ {
+    pub fn keys<'a>(&'a self) -> impl Iterator<Item = HashKey<'a>> {
         match self {
             Hash::HashMap(map) => Keys::HashMap(map.keys()),
             Hash::PackMap(map) => Keys::PackMap(map.keys()),
@@ -273,7 +273,7 @@ impl Hash {
     }
 
     /// Return an iterator over the values.
-    pub fn values(&self) -> impl Iterator<Item = HashValue> + '_ {
+    pub fn values<'a>(&'a self) -> impl Iterator<Item = HashValue<'a>> {
         match self {
             Hash::HashMap(map) => Values::HashMap(map.values()),
             Hash::PackMap(map) => Values::PackMap(map.values()),

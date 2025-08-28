@@ -67,7 +67,7 @@ impl PackList {
     }
 
     /// Take a peek at the value on the `edge` without removing it.
-    pub fn peek(&self, edge: Edge) -> Option<PackRef> {
+    pub fn peek<'a>(&'a self, edge: Edge) -> Option<PackRef<'a>> {
         let mut iter = self.pack.iter();
         match edge {
             Edge::Left => iter.next(),
@@ -189,12 +189,12 @@ impl PackList {
     }
 
     /// An iterator over the values in this list.
-    pub fn iter(&self) -> PackIter {
+    pub fn iter<'a>(&'a self) -> PackIter<'a> {
         self.pack.iter()
     }
 
     /// A reversible iterator over the values in this list.
-    pub fn iter_from(&self, edge: Edge) -> Reversible<PackIter> {
+    pub fn iter_from<'a>(&'a self, edge: Edge) -> Reversible<PackIter<'a>> {
         match edge {
             Edge::Left => Reversible::Forward(self.iter()),
             Edge::Right => Reversible::Reverse(self.iter().rev()),

@@ -79,7 +79,7 @@ impl PackSet {
     }
 
     /// Return an iterator over each value in this set.
-    pub fn iter(&self) -> PackIter {
+    pub fn iter<'a>(&'a self) -> PackIter<'a> {
         self.pack.iter()
     }
 }

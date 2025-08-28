@@ -208,17 +208,20 @@ impl SortedSet {
         }
     }
 
-    pub fn range(&self, range: Range<usize>) -> impl ExactSizeIterator<Item = (f64, SortedSetRef)> {
+    pub fn range<'a>(
+        &'a self,
+        range: Range<usize>,
+    ) -> impl ExactSizeIterator<Item = (f64, SortedSetRef<'a>)> {
         match self {
             SortedSet::Pack(set) => Iter::Pack(set.range(range)),
             SortedSet::Skiplist(list, _) => Iter::Skiplist(list.range(range)),
         }
     }
 
-    pub fn rev_range(
-        &self,
+    pub fn rev_range<'a>(
+        &'a self,
         range: Range<usize>,
-    ) -> impl ExactSizeIterator<Item = (f64, SortedSetRef)> {
+    ) -> impl ExactSizeIterator<Item = (f64, SortedSetRef<'a>)> {
         match self {
             SortedSet::Pack(set) => Iter::Pack(set.rev_range(range)),
             SortedSet::Skiplist(list, _) => Iter::Skiplist(list.rev_range(range)),

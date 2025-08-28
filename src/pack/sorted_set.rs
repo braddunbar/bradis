@@ -28,7 +28,7 @@ impl PackSortedSet {
     }
 
     /// Return an iterator over the score value pairs in this set.
-    pub fn iter(&self) -> Iter {
+    pub fn iter<'a>(&'a self) -> Iter<'a> {
         Iter(self.pack.iter())
     }
 
@@ -38,21 +38,24 @@ impl PackSortedSet {
     }
 
     /// Return an iterator over a `range` of indexes.
-    pub fn range(
-        &self,
+    pub fn range<'a>(
+        &'a self,
         range: Range<usize>,
-    ) -> impl ExactSizeIterator<Item = (f64, PackRef)> + DoubleEndedIterator {
+    ) -> impl ExactSizeIterator<Item = (f64, PackRef<'a>)> + DoubleEndedIterator {
         let take = range.end.saturating_sub(range.start);
         self.iter().skip(range.start).take(take)
     }
 
     /// Return a reverse iterator over a `range` of indexes.
-    pub fn rev_range(&self, range: Range<usize>) -> impl ExactSizeIterator<Item = (f64, PackRef)> {
+    pub fn rev_range<'a>(
+        &'a self,
+        range: Range<usize>,
+    ) -> impl ExactSizeIterator<Item = (f64, PackRef<'a>)> {
         self.range(range).rev()
     }
 
     /// Return an iterator over the values with scores within `bounds`.
-    pub fn range_score<R>(&self, bounds: &R) -> Iter
+    pub fn range_score<'a, R>(&'a self, bounds: &R) -> Iter<'a>
     where
         R: RangeBounds<f64>,
     {
@@ -76,7 +79,7 @@ impl PackSortedSet {
     }
 
     /// Return a reverse iterator over the values with scores within `bounds`.
-    pub fn rev_range_score<R>(&self, bounds: &R) -> Rev<Iter>
+    pub fn rev_range_score<'a, R>(&'a self, bounds: &R) -> Rev<Iter<'a>>
     where
         R: RangeBounds<f64>,
     {

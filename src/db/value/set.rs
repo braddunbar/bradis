@@ -197,7 +197,7 @@ impl Set {
     }
 
     /// Return an iterator of the values in this set.
-    pub fn iter(&self) -> Iter {
+    pub fn iter<'a>(&'a self) -> Iter<'a> {
         match self {
             Set::Int(set) => Iter::Int(set.iter()),
             Set::Pack(set) => Iter::Pack(set.iter()),

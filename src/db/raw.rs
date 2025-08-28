@@ -32,7 +32,7 @@ impl Raw {
     }
 
     /// Return a reference to a slice of this value.
-    pub fn slice(&self, range: Range<usize>) -> RawSliceRef {
+    pub fn slice<'a>(&'a self, range: Range<usize>) -> RawSliceRef<'a> {
         RawSliceRef::new(self, range)
     }
 
