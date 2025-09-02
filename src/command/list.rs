@@ -205,14 +205,18 @@ fn lindex(client: &mut Client, store: &mut Store) -> CommandResult {
         .get_db(client.db())?
         .get_list(&key)?
         .ok_or(Reply::Nil)?;
+    let len = list.len();
 
     if index < 0 {
-        index += list.len() as i64;
+        index = i64::try_from(len)
+            .ok()
+            .and_then(|len| index.checked_add(len))
+            .ok_or(Reply::Nil)?;
     }
 
-    let index = usize::try_from(index).map_err(|_| Reply::Nil)?;
+    let index = usize::try_from(index).or(Err(Reply::Nil))?;
 
-    if index >= list.len() {
+    if index >= len {
         return Err(Reply::Nil);
     }
 
