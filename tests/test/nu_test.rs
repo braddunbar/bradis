@@ -124,6 +124,7 @@ pub enum NuError {
     ),
 }
 
+#[allow(clippy::result_large_err)]
 pub fn run(name: &str, source_code: &str) -> Result<(), SuiteError> {
     let mut state = add_shell_command_context(create_default_context());
     if let Err(error) = run_inner(&mut state, name, source_code) {
@@ -135,6 +136,7 @@ pub fn run(name: &str, source_code: &str) -> Result<(), SuiteError> {
     Ok(())
 }
 
+#[allow(clippy::result_large_err)]
 fn run_inner(state: &mut EngineState, name: &str, source: &str) -> Result<(), NuError> {
     let mut stack = Stack::new();
     stack.set_cwd(current_dir().unwrap())?;
