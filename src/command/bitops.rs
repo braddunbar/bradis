@@ -603,7 +603,7 @@ fn bitop(client: &mut Client, store: &mut Store) -> CommandResult {
     db.set(&destination, result);
     store.dirty += 1;
     store.touch(client.db(), &destination);
-    client.reply(max_len as i64);
+    client.reply(max_len);
     Ok(None)
 }
 
@@ -641,7 +641,7 @@ fn bitop_not(client: &mut Client, store: &mut Store) -> CommandResult {
         db.set(&destination, result);
         store.dirty += 1;
         store.touch(client.db(), &destination);
-        client.reply(len as i64);
+        client.reply(len);
     }
     Ok(None)
 }

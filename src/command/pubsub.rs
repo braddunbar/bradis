@@ -60,8 +60,7 @@ fn help(client: &mut Client, _: &mut Store) -> CommandResult {
 }
 
 fn numpat(client: &mut Client, store: &mut Store) -> CommandResult {
-    let reply = store.pubsub.numpat() as i64;
-    client.reply(reply);
+    client.reply(store.pubsub.numpat());
     Ok(None)
 }
 
@@ -71,7 +70,7 @@ fn numsub(client: &mut Client, store: &mut Store) -> CommandResult {
         let key = client.request.pop()?;
         let count = store.pubsub.numsub(&key);
         client.reply(key);
-        client.reply(count as i64);
+        client.reply(count);
     }
     Ok(None)
 }
@@ -148,7 +147,7 @@ fn publish(client: &mut Client, store: &mut Store) -> CommandResult {
     let channel = client.request.pop()?;
     let message = client.request.pop()?;
     let count = store.pubsub.publish(&channel, &message);
-    client.reply(count as i64);
+    client.reply(count);
     Ok(None)
 }
 

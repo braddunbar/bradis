@@ -43,7 +43,7 @@ fn hdel(client: &mut Client, store: &mut Store) -> CommandResult {
         store.touch(client.db(), &key);
     }
 
-    client.reply(count as i64);
+    client.reply(count);
     Ok(None)
 }
 
@@ -219,8 +219,7 @@ fn hlen(client: &mut Client, store: &mut Store) -> CommandResult {
     let key = client.request.pop()?;
     let db = store.get_db(client.db())?;
     let hash = db.get_hash(&key)?.ok_or(Reply::Nil)?;
-    let len = hash.len() as i64;
-    client.reply(len);
+    client.reply(hash.len());
     Ok(None)
 }
 

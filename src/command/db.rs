@@ -98,7 +98,7 @@ pub static DBSIZE: Command = Command {
 fn dbsize(client: &mut Client, store: &mut Store) -> CommandResult {
     let db = store.get_db(client.db())?;
     let size = db.size();
-    client.reply(size as i64);
+    client.reply(size);
     Ok(None)
 }
 

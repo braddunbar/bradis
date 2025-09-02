@@ -49,7 +49,7 @@ fn append(client: &mut Client, store: &mut Store) -> CommandResult {
 
     value.append(&bytes[..]);
     let len = value.len();
-    client.reply(len as i64);
+    client.reply(len);
 
     store.dirty += 1;
     store.touch(client.db(), &key);
@@ -714,7 +714,7 @@ fn setrange(client: &mut Client, store: &mut Store) -> CommandResult {
     value.set_range(&bytes[..], start);
 
     let len = value.len();
-    client.reply(len as i64);
+    client.reply(len);
 
     store.dirty += 1;
     store.touch(client.db(), &key);
@@ -739,6 +739,6 @@ fn strlen(client: &mut Client, store: &mut Store) -> CommandResult {
     let db = store.get_db(client.db())?;
     let len = db.get_string(&key)?.ok_or(0)?.len();
 
-    client.reply(len as i64);
+    client.reply(len);
     Ok(None)
 }
