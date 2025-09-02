@@ -47,12 +47,12 @@ features = [
 
 [dev-dependencies]
 miette = { version = "7.5.0", features = ["fancy"] }
-nu-cli = "0.102.0"
-nu-cmd-extra = "0.102.0"
-nu-cmd-lang = "0.102.0"
-nu-command = "0.102.0"
-nu-engine = "0.102.0"
-nu-parser = "0.102.0"
-nu-protocol = "0.102.0"
-nu-std = "0.102.0"
+nu-cli = "0.106.1"
+nu-cmd-extra = "0.106.1"
+nu-cmd-lang = "0.106.1"
+nu-command = "0.106.1"
+nu-engine = "0.106.1"
+nu-parser = "0.106.1"
+nu-protocol = "0.106.1"
+nu-std = "0.106.1"
 proptest = "1.6.0"
