@@ -90,7 +90,7 @@ fn client_id(client: &mut Client, _: &mut Store) -> CommandResult {
 
 fn client_info(client: &mut Client, store: &mut Store) -> CommandResult {
     let mut buffer = Vec::new();
-    let info = store.clients.get(&client.id).unwrap();
+    let info = store.clients.get(&client.id).expect("client not found");
     info.write_info(store, &mut buffer);
     client.verbatim("txt", buffer);
     Ok(None)
@@ -591,8 +591,13 @@ fn command_count(client: &mut Client, _: &mut Store) -> CommandResult {
 }
 
 fn command_getkeys(client: &mut Client, _: &mut Store) -> CommandResult {
-    let command = client.request.pop_front().unwrap();
-    let getkeys = client.request.pop_front().unwrap();
+    let Some(command) = client.request.pop_front() else {
+        return Err(ReplyError::InvalidCommand.into());
+    };
+
+    let Some(getkeys) = client.request.pop_front() else {
+        return Err(ReplyError::InvalidCommand.into());
+    };
 
     if client.request.kind() == CommandKind::Unknown {
         return Err(ReplyError::InvalidCommand.into());

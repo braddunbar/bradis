@@ -81,13 +81,15 @@ fn get_field(mut value: &[u8], field: Field) -> i64 {
     let len = min(value.len(), buffer.len());
     buffer[..len].copy_from_slice(&value[..len]);
 
-    if signed {
+    let result = if signed {
         let result = i128::from_be_bytes(buffer) << (offset % 8);
-        i64::try_from(result >> (128 - bits)).unwrap()
+        i64::try_from(result >> (128 - bits))
     } else {
         let result = u128::from_be_bytes(buffer) << (offset % 8);
-        i64::try_from(result >> (128 - bits)).unwrap()
-    }
+        i64::try_from(result >> (128 - bits))
+    };
+
+    result.expect("get_field i64 overflow")
 }
 
 fn set_field(value: &mut [u8], field: Field, n: i64) {

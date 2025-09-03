@@ -25,7 +25,10 @@ pub fn parse<T: std::str::FromStr>(bytes: &[u8]) -> Option<T> {
 /// Return the length of an i64 in base 10 bytes.
 pub fn i64_len(n: i64) -> usize {
     let ilog10 = n.unsigned_abs().checked_ilog10().unwrap_or(0);
-    usize::try_from(ilog10).unwrap() + if n.is_negative() { 2 } else { 1 }
+    usize::try_from(ilog10)
+        .ok()
+        .and_then(|i| i.checked_add(if n.is_negative() { 2 } else { 1 }))
+        .expect("i64_len: usize overflow")
 }
 
 /// Parse an i64 if the string representation can be exactly reproduced. This means no leading or

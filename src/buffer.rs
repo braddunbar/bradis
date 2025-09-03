@@ -20,13 +20,13 @@ pub trait Buffer {
 impl Buffer for Vec<u8> {
     fn write_f64(&mut self, value: f64) -> &[u8] {
         self.clear();
-        write!(self, "{value}").unwrap();
+        let _ = write!(self, "{value}");
         &self[..]
     }
 
     fn write_i64(&mut self, value: i64) -> &[u8] {
         self.clear();
-        write!(self, "{value}").unwrap();
+        let _ = write!(self, "{value}");
         &self[..]
     }
 }
