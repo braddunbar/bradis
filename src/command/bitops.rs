@@ -154,7 +154,7 @@ macro_rules! impl_count_bits {
     ($T:ty) => {
         impl CountBits for $T {
             fn count_bits(&self) -> i64 {
-                self.count_ones() as i64
+                self.count_ones().into()
             }
         }
     };
@@ -732,13 +732,13 @@ fn bitpos(client: &mut Client, store: &mut Store) -> CommandResult {
         bit: bool,
         range: &Range<usize>,
         position: &mut usize,
-    ) -> Option<i64> {
+    ) -> Option<usize> {
         for (index, value) in slice.iter().enumerate() {
             if let Some(bits) = value.bit_index(bit) {
                 let result = *position + 8 * T::SIZE * index + bits;
                 // If the bit is out of range (in trailing bits), don't return it.
                 if range.contains(&result) {
-                    return Some(result as i64);
+                    return Some(result);
                 }
             }
         }
@@ -766,14 +766,16 @@ fn bitpos(client: &mut Client, store: &mut Store) -> CommandResult {
     let result = search(&[first], bit, &range, &mut position)
         .or_else(|| search(prefix, bit, &range, &mut position))
         .or_else(|| search(middle, bit, &range, &mut position))
-        .or_else(|| search(suffix, bit, &range, &mut position))
-        .or(if end_given || bit {
-            Some(-1)
-        } else {
-            Some(8 * value.len() as i64)
-        });
+        .or_else(|| search(suffix, bit, &range, &mut position));
 
-    client.reply(result);
+    if let Some(result) = result {
+        client.reply(result);
+    } else if end_given || bit {
+        client.reply(-1);
+    } else {
+        client.reply(8 * value.len());
+    }
+
     Ok(None)
 }
 
