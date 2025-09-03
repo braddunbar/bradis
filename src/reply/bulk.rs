@@ -91,12 +91,6 @@ impl From<StringSlice> for BulkReply {
     }
 }
 
-impl From<usize> for BulkReply {
-    fn from(value: usize) -> Self {
-        BulkReply::StringValue((value as i64).into())
-    }
-}
-
 impl From<f64> for BulkReply {
     fn from(value: f64) -> Self {
         BulkReply::StringValue(value.into())

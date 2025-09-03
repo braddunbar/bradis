@@ -6,7 +6,7 @@ pub use key::ConfigKey;
 
 use crate::{
     bytes::{lex, parse},
-    reply::Reply,
+    reply::{Reply, ReplyError},
     store::Store,
 };
 use bytes::Bytes;
@@ -56,7 +56,10 @@ pub static PROTOMAXBULKLEN: Config = Config {
 };
 
 fn get_proto_max_bulk_len(store: &mut Store) -> Reply {
-    Reply::Bulk(store.reader_config.blob_limit().into())
+    match i64::try_from(store.reader_config.blob_limit()) {
+        Ok(value) => Reply::Bulk(value.into()),
+        Err(_) => ReplyError::InvalidUsize.into(),
+    }
 }
 
 fn set_proto_max_bulk_len(value: &Bytes, store: &mut Store) -> Result<(), ConfigError> {
@@ -73,7 +76,10 @@ pub static PROTO_INLINE_MAX_SIZE: Config = Config {
 };
 
 fn get_proto_inline_max_size(store: &mut Store) -> Reply {
-    Reply::Bulk(store.reader_config.inline_limit().into())
+    match i64::try_from(store.reader_config.inline_limit()) {
+        Ok(value) => Reply::Bulk(value.into()),
+        Err(_) => ReplyError::InvalidUsize.into(),
+    }
 }
 
 fn set_proto_inline_max_size(value: &Bytes, store: &mut Store) -> Result<(), ConfigError> {
@@ -96,7 +102,10 @@ pub static HASH_MAX_LISTPACK_ENTRIES: Config = Config {
 };
 
 fn get_hash_max_listpack_entries(store: &mut Store) -> Reply {
-    Reply::Bulk(store.hash_max_listpack_entries.into())
+    match i64::try_from(store.hash_max_listpack_entries) {
+        Ok(value) => Reply::Bulk(value.into()),
+        Err(_) => ReplyError::InvalidUsize.into(),
+    }
 }
 
 fn set_hash_max_listpack_entries(value: &Bytes, store: &mut Store) -> Result<(), ConfigError> {
@@ -119,7 +128,10 @@ pub static HASH_MAX_LISTPACK_VALUE: Config = Config {
 };
 
 fn get_hash_max_listpack_value(store: &mut Store) -> Reply {
-    Reply::Bulk(store.hash_max_listpack_value.into())
+    match i64::try_from(store.hash_max_listpack_value) {
+        Ok(value) => Reply::Bulk(value.into()),
+        Err(_) => ReplyError::InvalidUsize.into(),
+    }
 }
 
 fn set_hash_max_listpack_value(value: &Bytes, store: &mut Store) -> Result<(), ConfigError> {
@@ -142,7 +154,10 @@ pub static ZSET_MAX_LISTPACK_ENTRIES: Config = Config {
 };
 
 fn get_zset_max_listpack_entries(store: &mut Store) -> Reply {
-    Reply::Bulk(store.zset_max_listpack_entries.into())
+    match i64::try_from(store.zset_max_listpack_entries) {
+        Ok(value) => Reply::Bulk(value.into()),
+        Err(_) => ReplyError::InvalidUsize.into(),
+    }
 }
 
 fn set_zset_max_listpack_entries(value: &Bytes, store: &mut Store) -> Result<(), ConfigError> {
@@ -165,7 +180,10 @@ pub static ZSET_MAX_LISTPACK_VALUE: Config = Config {
 };
 
 fn get_zset_max_listpack_value(store: &mut Store) -> Reply {
-    Reply::Bulk(store.zset_max_listpack_value.into())
+    match i64::try_from(store.zset_max_listpack_value) {
+        Ok(value) => Reply::Bulk(value.into()),
+        Err(_) => ReplyError::InvalidUsize.into(),
+    }
 }
 
 fn set_zset_max_listpack_value(value: &Bytes, store: &mut Store) -> Result<(), ConfigError> {
@@ -181,7 +199,10 @@ pub static SET_MAX_INTSET_ENTRIES: Config = Config {
 };
 
 fn get_set_max_intset_entries(store: &mut Store) -> Reply {
-    Reply::Bulk(store.set_config.max_intset_entries.into())
+    match i64::try_from(store.set_config.max_intset_entries) {
+        Ok(value) => Reply::Bulk(value.into()),
+        Err(_) => ReplyError::InvalidUsize.into(),
+    }
 }
 
 fn set_set_max_intset_entries(value: &Bytes, store: &mut Store) -> Result<(), ConfigError> {
@@ -197,7 +218,10 @@ pub static SET_MAX_LISTPACK_ENTRIES: Config = Config {
 };
 
 fn get_set_max_listpack_entries(store: &mut Store) -> Reply {
-    Reply::Bulk(store.set_config.max_listpack_entries.into())
+    match i64::try_from(store.set_config.max_listpack_entries) {
+        Ok(value) => Reply::Bulk(value.into()),
+        Err(_) => ReplyError::InvalidUsize.into(),
+    }
 }
 
 fn set_set_max_listpack_entries(value: &Bytes, store: &mut Store) -> Result<(), ConfigError> {
@@ -213,7 +237,10 @@ pub static SET_MAX_LISTPACK_VALUE: Config = Config {
 };
 
 fn get_set_max_listpack_value(store: &mut Store) -> Reply {
-    Reply::Bulk(store.set_config.max_listpack_value.into())
+    match i64::try_from(store.set_config.max_listpack_value) {
+        Ok(value) => Reply::Bulk(value.into()),
+        Err(_) => ReplyError::InvalidUsize.into(),
+    }
 }
 
 fn set_set_max_listpack_value(value: &Bytes, store: &mut Store) -> Result<(), ConfigError> {
