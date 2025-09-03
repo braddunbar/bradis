@@ -68,7 +68,10 @@ impl From<i64> for Reply {
 
 impl From<usize> for Reply {
     fn from(value: usize) -> Self {
-        Reply::Integer(value as i64)
+        match i64::try_from(value) {
+            Ok(value) => Reply::Integer(value),
+            Err(_) => ReplyError::InvalidUsize.into(),
+        }
     }
 }
 

@@ -98,6 +98,9 @@ pub enum ReplyError {
     #[error("ERR Invalid TTL value, must be >= 0")]
     InvalidTtl,
 
+    #[error("ERR invalid usize reply")]
+    InvalidUsize,
+
     #[error("ERR MULTI calls can not be nested")]
     MultiNested,
 
