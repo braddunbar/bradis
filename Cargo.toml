@@ -46,7 +46,7 @@ features = [
 ]
 
 [dev-dependencies]
-miette = { version = "7.5.0", features = ["fancy"] }
+miette = { version = "7.6.0", features = ["fancy"] }
 nu-cli = "0.106.1"
 nu-cmd-extra = "0.106.1"
 nu-cmd-lang = "0.106.1"
