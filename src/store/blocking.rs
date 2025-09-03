@@ -5,10 +5,7 @@ use crate::{
     reply::Reply,
     store::DATABASES,
 };
-use hashbrown::{
-    HashMap, HashSet,
-    hash_map::{Entry, EntryRef},
-};
+use hashbrown::{HashMap, HashSet, hash_map::Entry};
 use std::{iter::StepBy, ops::Range};
 
 /// Keep track of blocking clients, the db/key pairs they're waiting for, and keys that are ready.
@@ -52,10 +49,7 @@ impl Blocking {
         // Add the client to the queue for each key it's blocked on.
         for index in blocking_keys {
             let key = client.request.get(index).unwrap();
-            let mut entry = match queues.entry_ref(&key) {
-                EntryRef::Occupied(entry) => entry,
-                EntryRef::Vacant(entry) => entry.insert_entry(Default::default()),
-            };
+            let mut entry = queues.entry_ref(&key).or_default_entry();
 
             // Add to the queue
             entry.get_mut().insert_back(client.id);
