@@ -153,8 +153,8 @@ mod tests {
         assert_eq!(2, i64_len(12));
         assert_eq!(3, i64_len(-23));
         assert_eq!(4, i64_len(-234));
-        assert_eq!(9, i64_len(-23456789));
-        assert_eq!(10, i64_len(1234567890));
+        assert_eq!(9, i64_len(-23_456_789));
+        assert_eq!(10, i64_len(1_234_567_890));
     }
 }
 

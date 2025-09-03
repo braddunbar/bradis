@@ -23,8 +23,8 @@ use triomphe::Arc;
 impl From<TestError> for ShellError {
     fn from(value: TestError) -> Self {
         ShellError::GenericError {
-            error: format!("{}", value),
-            msg: format!("{}", value),
+            error: format!("{value}"),
+            msg: format!("{value}"),
             span: match value {
                 TestError::Timeout(span) => Some(span),
                 _ => None,

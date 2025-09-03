@@ -67,7 +67,7 @@ impl Subscribers {
     {
         let keys = self.subscribers.remove(subscriber)?;
 
-        for key in keys.iter() {
+        for key in &keys {
             remove!(self.channels, key, subscriber);
         }
 

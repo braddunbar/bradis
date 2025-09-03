@@ -126,7 +126,7 @@ impl Node<[Lane]> {
         match bounds.start_bound() {
             Excluded(start) => *self.score <= *start,
             Included(start) => *self.score < *start,
-            _ => false,
+            Unbounded => false,
         }
     }
 
@@ -136,7 +136,7 @@ impl Node<[Lane]> {
         match bounds.end_bound() {
             Excluded(end) => *self.score >= *end,
             Included(end) => *self.score > *end,
-            _ => false,
+            Unbounded => false,
         }
     }
 }
@@ -317,7 +317,7 @@ impl Skiplist {
                     next: None,
                     span: self.len,
                 };
-                route[level] = &mut self.head[level];
+                route[level] = &raw mut self.head[level];
                 ranks[level] = 0;
                 self.level += 1;
             }
@@ -515,9 +515,9 @@ impl Skiplist {
             if step.node.after(bounds) {
                 if step.level == 0 {
                     return Walk::Return(result);
-                } else {
-                    return Walk::NextLevel;
                 }
+
+                return Walk::NextLevel;
             }
 
             result = Some((step.link, step.rank));
@@ -649,7 +649,7 @@ impl Skiplist {
                     }
                 };
             }
-            route[level] = &mut lanes[level];
+            route[level] = &raw mut lanes[level];
         }
 
         (route, ranks)

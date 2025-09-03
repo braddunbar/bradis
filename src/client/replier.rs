@@ -130,7 +130,7 @@ impl<W: AsyncWrite + Unpin + Send + 'static> Replier<W> {
             }
             Error(error) => {
                 self.buffer.clear();
-                write!(self.buffer, "{}", error).unwrap();
+                write!(self.buffer, "{error}").unwrap();
                 self.writer.write_simple_error(&self.buffer[..]).await?;
             }
             Integer(value) => {

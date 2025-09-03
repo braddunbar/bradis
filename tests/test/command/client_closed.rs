@@ -13,11 +13,11 @@ use triomphe::Arc;
 pub struct ClientClosedCommand(pub Arc<Mutex<Option<Test>>>);
 
 impl Command for ClientClosedCommand {
-    fn name(&self) -> &str {
+    fn name(&self) -> &'static str {
         "client closed"
     }
 
-    fn description(&self) -> &str {
+    fn description(&self) -> &'static str {
         "is the client closed?"
     }
 

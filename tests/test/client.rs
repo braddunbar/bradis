@@ -1,5 +1,5 @@
 use crate::test::{TestError, TestResult};
-use respite::{RespReader, RespWriter};
+use respite::{RespConfig, RespReader, RespWriter};
 use tokio::io::{DuplexStream, ReadHalf, WriteHalf};
 
 #[derive(Debug)]
@@ -13,7 +13,7 @@ impl TestClient {
     pub async fn connect(stream: DuplexStream) -> TestResult<Self> {
         let (reader, writer) = tokio::io::split(stream);
         let mut writer = RespWriter::new(writer);
-        let mut reader = RespReader::new(reader, Default::default());
+        let mut reader = RespReader::new(reader, RespConfig::default());
 
         writer.write_inline(b"client id").await?;
         let value = reader.value().await?.ok_or(TestError::ReaderClosed)?;

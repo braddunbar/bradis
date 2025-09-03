@@ -13,11 +13,11 @@ use triomphe::Arc;
 pub struct RunCommand(pub Arc<Mutex<Option<Test>>>);
 
 impl Command for RunCommand {
-    fn name(&self) -> &str {
+    fn name(&self) -> &'static str {
         "run"
     }
 
-    fn description(&self) -> &str {
+    fn description(&self) -> &'static str {
         "run a redis command"
     }
 

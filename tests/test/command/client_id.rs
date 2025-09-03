@@ -10,11 +10,11 @@ use triomphe::Arc;
 pub struct ClientIdCommand(pub Arc<Mutex<Option<Test>>>);
 
 impl Command for ClientIdCommand {
-    fn name(&self) -> &str {
+    fn name(&self) -> &'static str {
         "client-id"
     }
 
-    fn description(&self) -> &str {
+    fn description(&self) -> &'static str {
         "get the client id"
     }
 
@@ -38,7 +38,7 @@ impl Command for ClientIdCommand {
 
         Ok(PipelineData::Value(
             Value::String {
-                val: format!("{}", id),
+                val: format!("{id}"),
                 internal_span: call.span(),
             },
             None,

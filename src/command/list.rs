@@ -574,9 +574,9 @@ fn lpos(client: &mut Client, store: &mut Store) -> CommandResult {
     let Some(list) = db.get_list(&key)? else {
         if count.is_some() {
             return Err(Reply::Array(0));
-        } else {
-            return Err(Reply::Nil);
         }
+
+        return Err(Reply::Nil);
     };
     let len = list.len();
     if maxlen == 0 {

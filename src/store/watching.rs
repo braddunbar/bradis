@@ -38,7 +38,7 @@ impl Watching {
             entry.get_mut().insert_back(id);
             entry.key().clone()
         } else {
-            let mut entry = entry.insert(Default::default());
+            let mut entry = entry.or_default_entry();
             entry.get_mut().insert_back(id);
             entry.key().clone()
         };

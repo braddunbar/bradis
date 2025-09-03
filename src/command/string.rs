@@ -71,7 +71,7 @@ pub static DECR: Command = Command {
 
 fn decr(client: &mut Client, store: &mut Store) -> CommandResult {
     let key = client.request.pop()?;
-    increment(client, store, key, -1)
+    increment(client, store, &key, -1)
 }
 
 pub static DECRBY: Command = Command {
@@ -94,7 +94,7 @@ fn decrby(client: &mut Client, store: &mut Store) -> CommandResult {
         .i64()?
         .checked_neg()
         .ok_or(ReplyError::IncrOverflow)?;
-    increment(client, store, key, by)
+    increment(client, store, &key, by)
 }
 
 pub static GET: Command = Command {
@@ -236,7 +236,7 @@ fn getex(client: &mut Client, store: &mut Store) -> CommandResult {
             Persist => {
                 db.persist(&key);
             }
-        };
+        }
 
         store.dirty += 1;
         store.touch(client.db(), &key);
@@ -288,7 +288,7 @@ pub static INCR: Command = Command {
 
 fn incr(client: &mut Client, store: &mut Store) -> CommandResult {
     let key = client.request.pop()?;
-    increment(client, store, key, 1)
+    increment(client, store, &key, 1)
 }
 
 pub static INCRBY: Command = Command {
@@ -307,7 +307,7 @@ pub static INCRBY: Command = Command {
 fn incrby(client: &mut Client, store: &mut Store) -> CommandResult {
     let key = client.request.pop()?;
     let by = client.request.i64()?;
-    increment(client, store, key, by)
+    increment(client, store, &key, by)
 }
 
 pub static INCRBYFLOAT: Command = Command {
@@ -349,10 +349,10 @@ fn incrbyfloat(client: &mut Client, store: &mut Store) -> CommandResult {
     Ok(None)
 }
 
-fn increment(client: &mut Client, store: &mut Store, key: Bytes, by: i64) -> CommandResult {
+fn increment(client: &mut Client, store: &mut Store, key: &Bytes, by: i64) -> CommandResult {
     let db = store.mut_db(client.db())?;
     let value = db
-        .entry_ref(&key)
+        .entry_ref(key)
         .or_insert_with(|| 0i64.into())
         .mut_string()?
         .integer()
@@ -362,7 +362,7 @@ fn increment(client: &mut Client, store: &mut Store, key: Bytes, by: i64) -> Com
     client.reply(*value);
 
     store.dirty += 1;
-    store.touch(client.db(), &key);
+    store.touch(client.db(), key);
 
     Ok(None)
 }

@@ -5,5 +5,5 @@ use std::hash::Hash;
 /// See hashbrown documentation for details.
 pub trait KeyRef<K>: Eq + Equivalent<K> + Hash {}
 
-/// Impl KeyRef for all values that impl the prerequisite traits.
+/// Impl `KeyRef` for all values that impl the prerequisite traits.
 impl<K, T> KeyRef<K> for T where T: Eq + Equivalent<K> + Hash + ?Sized {}

@@ -126,8 +126,8 @@ impl IntSet {
 
     /// Remove `value`. Return false if it wasn't found.
     pub fn remove(&mut self, value: i64) -> bool {
-        fn remove<T: Ord + PartialEq>(set: &mut Vec<T>, value: T) -> bool {
-            if let Ok(n) = set.binary_search(&value) {
+        fn remove<T: Ord + PartialEq>(set: &mut Vec<T>, value: &T) -> bool {
+            if let Ok(n) = set.binary_search(value) {
                 set.remove(n);
                 true
             } else {
@@ -141,10 +141,10 @@ impl IntSet {
 
         use IntSet::*;
         let result = match self {
-            I8(set) => value.try_into().map(|i| remove(set, i)).unwrap_or(false),
-            I16(set) => value.try_into().map(|i| remove(set, i)).unwrap_or(false),
-            I32(set) => value.try_into().map(|i| remove(set, i)).unwrap_or(false),
-            I64(set) => remove(set, value),
+            I8(set) => value.try_into().map(|i| remove(set, &i)).unwrap_or(false),
+            I16(set) => value.try_into().map(|i| remove(set, &i)).unwrap_or(false),
+            I32(set) => value.try_into().map(|i| remove(set, &i)).unwrap_or(false),
+            I64(set) => remove(set, &value),
         };
         if result {
             self.shrink();
@@ -186,8 +186,8 @@ impl IntSet {
     /// The maximum length of an element in base 10 bytes.
     pub fn longest(&self) -> usize {
         let mut iter = self.iter();
-        let first = iter.next().map(i64_len).unwrap_or(0);
-        let last = iter.next_back().map(i64_len).unwrap_or(0);
+        let first = iter.next().map_or(0, i64_len);
+        let last = iter.next_back().map_or(0, i64_len);
         std::cmp::max(first, last)
     }
 
@@ -382,9 +382,9 @@ mod tests {
         assert_eq!(2, set.longest());
         set.insert(-10);
         assert_eq!(3, set.longest());
-        set.insert(-2345678);
+        set.insert(-2_345_678);
         assert_eq!(8, set.longest());
-        set.insert(1234567890);
+        set.insert(1_234_567_890);
         assert_eq!(10, set.longest());
     }
 }
@@ -403,7 +403,7 @@ mod proptests {
             others in vec(any::<i64>(), 15..20),
             indexes in vec(any::<Index>(), 5..10),
         ) {
-            items.sort();
+            items.sort_unstable();
             let mut set = IntSet::default();
             for item in &items {
                 set.insert(*item);

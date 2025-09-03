@@ -634,9 +634,15 @@ fn bitop_not(client: &mut Client, store: &mut Store) -> CommandResult {
         // SAFETY: There are no invalid bit patterns for u128 and we only use them to negate bits.
         let (prefix, middle, suffix) = unsafe { result.align_to_mut::<u128>() };
 
-        prefix.iter_mut().for_each(|x| *x = !*x);
-        middle.iter_mut().for_each(|x| *x = !*x);
-        suffix.iter_mut().for_each(|x| *x = !*x);
+        for x in prefix {
+            *x = !*x;
+        }
+        for x in middle {
+            *x = !*x;
+        }
+        for x in suffix {
+            *x = !*x;
+        }
 
         db.set(&destination, result);
         store.dirty += 1;

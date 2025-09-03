@@ -81,7 +81,7 @@ pub struct BlockResult {
 impl BlockResult {
     /// Create a new [`BlockResult`].
     fn new(timeout: Duration, keys: StepBy<Range<usize>>) -> Self {
-        Self { timeout, keys }
+        Self { keys, timeout }
     }
 }
 

@@ -23,7 +23,7 @@ pub fn spawn<F>(f: F)
 where
     F: Future<Output = ()> + Send + 'static,
 {
-    SPAWNER.with(|s| s.borrow_mut().spawn(f).unwrap())
+    SPAWNER.with(|s| s.borrow_mut().spawn(f).unwrap());
 }
 
 pub struct TaskHandle<T>(Option<RemoteHandle<T>>);

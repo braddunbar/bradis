@@ -312,14 +312,14 @@ mod tests {
 
         assert_eq!(back_len_size(0x4000), 3);
         assert_eq!(back_len_size(0x4001), 3);
-        assert_eq!(back_len_size(0x1fffff), 3);
+        assert_eq!(back_len_size(0x001f_ffff), 3);
 
-        assert_eq!(back_len_size(0x200000), 4);
-        assert_eq!(back_len_size(0x200001), 4);
-        assert_eq!(back_len_size(0xfffffff), 4);
+        assert_eq!(back_len_size(0x0020_0000), 4);
+        assert_eq!(back_len_size(0x0020_0001), 4);
+        assert_eq!(back_len_size(0x0fff_ffff), 4);
 
-        assert_eq!(back_len_size(0x10000000), 5);
-        assert_eq!(back_len_size(0x10000001), 5);
+        assert_eq!(back_len_size(0x1000_0000), 5);
+        assert_eq!(back_len_size(0x1000_0001), 5);
     }
 
     #[test]
@@ -337,16 +337,16 @@ mod tests {
         // Three bytes
         assert_back_len!(0x4000, b"\x00\x80\x81");
         assert_back_len!(0x4001, b"\x01\x80\x81");
-        assert_back_len!(0x1fffff, b"\x7f\xff\xff");
+        assert_back_len!(0x001f_ffff, b"\x7f\xff\xff");
 
         // Four bytes
-        assert_back_len!(0x200000, b"\x00\x80\x80\x81");
-        assert_back_len!(0x200001, b"\x01\x80\x80\x81");
-        assert_back_len!(0xfffffff, b"\x7f\xff\xff\xff");
+        assert_back_len!(0x0020_0000, b"\x00\x80\x80\x81");
+        assert_back_len!(0x0020_0001, b"\x01\x80\x80\x81");
+        assert_back_len!(0x0fff_ffff, b"\x7f\xff\xff\xff");
 
         // Five bytes
-        assert_back_len!(0x10000000, b"\x00\x80\x80\x80\x81");
-        assert_back_len!(0x10000001, b"\x01\x80\x80\x80\x81");
+        assert_back_len!(0x1000_0000, b"\x00\x80\x80\x80\x81");
+        assert_back_len!(0x1000_0001, b"\x01\x80\x80\x80\x81");
     }
 
     #[test]

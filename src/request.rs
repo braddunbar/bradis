@@ -217,7 +217,7 @@ impl Request {
         Ok(Duration::from_secs_f64(timeout))
     }
 
-    fn _ttl<const U: i128>(&mut self) -> Result<u128, ReplyError> {
+    fn ttl_with<const U: i128>(&mut self) -> Result<u128, ReplyError> {
         parse::<i128>(&self.pop()?)
             .and_then(|x| x.checked_mul(U))
             .and_then(|x| {
@@ -233,25 +233,25 @@ impl Request {
     }
 
     pub fn ttl(&mut self) -> Result<u128, ReplyError> {
-        self._ttl::<1000>()
+        self.ttl_with::<1000>()
     }
 
     pub fn pttl(&mut self) -> Result<u128, ReplyError> {
-        self._ttl::<1>()
+        self.ttl_with::<1>()
     }
 
-    fn _expiretime<const U: u128>(&mut self) -> Result<u128, ReplyError> {
+    fn expiretime_with<const U: u128>(&mut self) -> Result<u128, ReplyError> {
         parse::<u128>(&self.pop()?)
             .and_then(|x| x.checked_mul(U))
             .ok_or(ReplyError::ExpireTime(self.command))
     }
 
     pub fn expiretime(&mut self) -> Result<u128, ReplyError> {
-        self._expiretime::<1000>()
+        self.expiretime_with::<1000>()
     }
 
     pub fn pexpiretime(&mut self) -> Result<u128, ReplyError> {
-        self._expiretime::<1>()
+        self.expiretime_with::<1>()
     }
 
     pub fn numkeys(&mut self) -> Result<usize, ReplyError> {

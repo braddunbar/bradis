@@ -639,14 +639,18 @@ fn zrange(client: &mut Client, store: &mut Store) -> CommandResult {
         Score => zrangebyscore,
     };
 
-    f(client, store, options)
+    f(client, store, &options)
 }
 
-fn zrangebylex(_client: &mut Client, _store: &mut Store, _options: ZrangeOptions) -> CommandResult {
+fn zrangebylex(
+    _client: &mut Client,
+    _store: &mut Store,
+    _options: &ZrangeOptions,
+) -> CommandResult {
     todo!()
 }
 
-fn zrangebyrank(client: &mut Client, store: &mut Store, options: ZrangeOptions) -> CommandResult {
+fn zrangebyrank(client: &mut Client, store: &mut Store, options: &ZrangeOptions) -> CommandResult {
     if options.limit.is_some() {
         return Err(ReplyError::ZrangeLimit.into());
     }
@@ -668,7 +672,7 @@ fn zrangebyrank(client: &mut Client, store: &mut Store, options: ZrangeOptions) 
     Ok(None)
 }
 
-fn zrangebyscore(client: &mut Client, store: &mut Store, options: ZrangeOptions) -> CommandResult {
+fn zrangebyscore(client: &mut Client, store: &mut Store, options: &ZrangeOptions) -> CommandResult {
     let key = client.request.pop()?;
     let min = score_bound(client)?;
     let max = score_bound(client)?;
@@ -688,7 +692,7 @@ fn zrangebyscore(client: &mut Client, store: &mut Store, options: ZrangeOptions)
 fn zrange_reply<'a, I: Iterator<Item = (f64, SortedSetRef<'a>)> + ExactSizeIterator>(
     client: &mut Client,
     iterator: I,
-    options: ZrangeOptions,
+    options: &ZrangeOptions,
 ) {
     let mut size = iterator.len();
     let (offset, limit) = options.limit.unwrap_or((0, usize::MAX));

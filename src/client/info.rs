@@ -118,7 +118,7 @@ impl ClientInfo {
 
         buffer.extend_from_slice(b" name=");
         if let Some(ref name) = self.name {
-            _ = write!(buffer, "{}", name);
+            _ = write!(buffer, "{name}");
         }
 
         _ = write!(buffer, " multi={multi}");

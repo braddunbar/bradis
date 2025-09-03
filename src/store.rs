@@ -248,7 +248,7 @@ impl Store {
             // In order to run a command with an exclusive reference to both the client and the store,
             // we need to remove blocking clients from the store.
             let mut clients = self.blocking.take_clients();
-            for (index, keys) in ready.iter() {
+            for (index, keys) in &ready {
                 for key in keys.iter() {
                     self.unblock_key(&mut clients, *index, key);
                 }

@@ -126,7 +126,7 @@ fn to_value(resp: &RespValue, internal_span: Span) -> Value {
         }
         Map(map) => {
             let mut value_record = Record::new();
-            for (key, value) in map.iter() {
+            for (key, value) in map {
                 let RespPrimitive::String(key) = key else {
                     todo!();
                 };
@@ -220,11 +220,11 @@ fn to_value(resp: &RespValue, internal_span: Span) -> Value {
 }
 
 impl Command for ReadValueCommand {
-    fn name(&self) -> &str {
+    fn name(&self) -> &'static str {
         "read-value"
     }
 
-    fn description(&self) -> &str {
+    fn description(&self) -> &'static str {
         "read a value from the client"
     }
 

@@ -5,7 +5,7 @@ use std::{mem::MaybeUninit, ops::Deref, slice::from_raw_parts};
 /// The maximum length of an [`ArrayString`].
 const MAX_LEN: usize = 38;
 
-/// An array of bytes that can be embedded in a struct when small enough. When ArrayVec supports
+/// An array of bytes that can be embedded in a struct when small enough. When `ArrayVec` supports
 /// const generics (and therefore a `u8` length) we can just swap to using that.
 #[derive(Clone)]
 pub struct ArrayString {
@@ -47,7 +47,7 @@ impl ArrayString {
         if end > len {
             self.len = u8::try_from(end).unwrap();
             if start > len {
-                for byte in self.data[len..start].iter_mut() {
+                for byte in &mut self.data[len..start] {
                     byte.write(0);
                 }
             }

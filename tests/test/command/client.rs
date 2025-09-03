@@ -13,11 +13,11 @@ use triomphe::Arc;
 pub struct ClientCommand(pub Arc<Mutex<Option<Test>>>);
 
 impl Command for ClientCommand {
-    fn name(&self) -> &str {
+    fn name(&self) -> &'static str {
         "client"
     }
 
-    fn description(&self) -> &str {
+    fn description(&self) -> &'static str {
         "use a particular client"
     }
 

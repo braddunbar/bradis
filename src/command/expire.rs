@@ -41,7 +41,7 @@ pub static EXPIRE: Command = Command {
 fn expire(client: &mut Client, store: &mut Store) -> CommandResult {
     let key = client.request.pop()?;
     let at = client.request.ttl()?;
-    set_expiration(client, store, key, at)
+    set_expiration(client, store, &key, at)
 }
 
 pub static EXPIRETIME: Command = Command {
@@ -82,7 +82,7 @@ pub static EXPIREAT: Command = Command {
 fn expireat(client: &mut Client, store: &mut Store) -> CommandResult {
     let key = client.request.pop()?;
     let at = client.request.expiretime()?;
-    set_expiration(client, store, key, at)
+    set_expiration(client, store, &key, at)
 }
 
 pub static PERSIST: Command = Command {
@@ -122,7 +122,7 @@ pub static PEXPIRE: Command = Command {
 fn pexpire(client: &mut Client, store: &mut Store) -> CommandResult {
     let key = client.request.pop()?;
     let at = client.request.pttl()?;
-    set_expiration(client, store, key, at)
+    set_expiration(client, store, &key, at)
 }
 
 pub static PEXPIREAT: Command = Command {
@@ -141,7 +141,7 @@ pub static PEXPIREAT: Command = Command {
 fn pexpireat(client: &mut Client, store: &mut Store) -> CommandResult {
     let key = client.request.pop()?;
     let at = client.request.pexpiretime()?;
-    set_expiration(client, store, key, at)
+    set_expiration(client, store, &key, at)
 }
 
 pub static PEXPIRETIME: Command = Command {
@@ -173,7 +173,7 @@ fn get_expiretime(client: &mut Client, store: &mut Store) -> Result<i64, Reply> 
     })
 }
 
-fn set_expiration(client: &mut Client, store: &mut Store, key: Bytes, at: u128) -> CommandResult {
+fn set_expiration(client: &mut Client, store: &mut Store, key: &Bytes, at: u128) -> CommandResult {
     let lazy = store.lazy_expire;
 
     if client.request.remaining() > 1 {
@@ -182,7 +182,7 @@ fn set_expiration(client: &mut Client, store: &mut Store, key: Bytes, at: u128) 
 
     if let Some(option) = client.request.try_pop() {
         let db = store.get_db(client.db())?;
-        let expires = db.expires_at(&key[..]);
+        let expires = db.expires_at(key);
 
         use ExpireOption::*;
         let skip = match (lex(&option[..]), expires) {
@@ -202,9 +202,9 @@ fn set_expiration(client: &mut Client, store: &mut Store, key: Bytes, at: u128) 
     let db = store.mut_db(client.db())?;
 
     if epoch().as_millis() > at {
-        if let Some(value) = db.remove(&key) {
+        if let Some(value) = db.remove(key) {
             store.drop_value(value, lazy);
-            store.touch(client.db(), &key);
+            store.touch(client.db(), key);
             client.reply(1);
         } else {
             client.reply(0);
@@ -213,7 +213,7 @@ fn set_expiration(client: &mut Client, store: &mut Store, key: Bytes, at: u128) 
     }
 
     if db.expire(&key[..], at) {
-        store.touch(client.db(), &key);
+        store.touch(client.db(), key);
         client.reply(1);
     } else {
         client.reply(0);

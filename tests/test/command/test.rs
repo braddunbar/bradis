@@ -13,11 +13,11 @@ use triomphe::Arc;
 pub struct TestCommand(pub Arc<Mutex<Option<Test>>>);
 
 impl Command for TestCommand {
-    fn name(&self) -> &str {
+    fn name(&self) -> &'static str {
         "test"
     }
 
-    fn description(&self) -> &str {
+    fn description(&self) -> &'static str {
         "define a redis test"
     }
 

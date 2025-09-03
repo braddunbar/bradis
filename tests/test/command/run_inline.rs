@@ -13,11 +13,11 @@ use triomphe::Arc;
 pub struct RunInlineCommand(pub Arc<Mutex<Option<Test>>>);
 
 impl Command for RunInlineCommand {
-    fn name(&self) -> &str {
+    fn name(&self) -> &'static str {
         "run-inline"
     }
 
-    fn description(&self) -> &str {
+    fn description(&self) -> &'static str {
         "run an inline redis command"
     }
 

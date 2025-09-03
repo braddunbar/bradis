@@ -453,7 +453,7 @@ impl Client {
         let skipped = self.reply_mode == ReplyMode::Skip;
 
         // Store the last command.
-        let command = self.request.command as *const _ as *mut _;
+        let command = std::ptr::from_ref(self.request.command).cast_mut();
         self.last_command.store(command, Ordering::Relaxed);
 
         let block = 'run: {
