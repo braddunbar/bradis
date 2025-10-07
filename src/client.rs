@@ -15,6 +15,7 @@ use crate::{
     TaskHandle, epoch, request::Request,
 };
 use bytes::Bytes;
+use futures::StreamExt;
 use respite::{RespConfig, RespReader, RespRequest, RespVersion};
 use std::{
     collections::VecDeque,
@@ -193,13 +194,11 @@ impl Client {
         let quit_sender = Arc::new(Mutex::new(Some(quit_sender)));
 
         // Spawn the reader
-        let mut reader = RespReader::new(reader, config);
+        let mut requests = RespReader::new(reader, config).requests();
         let reader_task = crate::spawn_with_handle(async move {
-            reader
-                .requests(|request| {
-                    _ = request_sender.send(request);
-                })
-                .await;
+            while let Some(request) = requests.next().await {
+                _ = request_sender.send(request);
+            }
         });
 
         // Spawn the replier

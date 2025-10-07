@@ -3366,9 +3366,9 @@ dependencies = [
 
 [[package]]
 name = "respite"
-version = "0.3.9"
+version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0e1e645556479138b548b4c43143cd9ddb35f8937f54370bc49a518902145ea4"
+checksum = "594a6afe650bbb3d02ca6e319cbd4651e405185b8b257e9a1f223bedeefff1a0"
 dependencies = [
  "bytes",
  "futures",
