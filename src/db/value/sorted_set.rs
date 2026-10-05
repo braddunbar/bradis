@@ -115,10 +115,10 @@ impl SortedSet {
         Q: KeyRef<StringValue> + ?Sized + 'a + AsRef<[u8]>,
         StringValue: From<&'a Q>,
     {
-        if let SortedSet::Pack(_) = self {
-            if value.as_ref().pack_size() > max_size {
-                self.convert();
-            }
+        if let SortedSet::Pack(_) = self
+            && value.as_ref().pack_size() > max_size
+        {
+            self.convert();
         }
 
         match self {

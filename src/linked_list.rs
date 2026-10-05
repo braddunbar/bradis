@@ -11,7 +11,7 @@ struct Node<T> {
 
 impl<T> Node<T> {
     fn link(self) -> Link<T> {
-        Some(Box::leak(Box::new(self)).into())
+        Some(Box::into_non_null(Box::new(self)))
     }
 }
 
@@ -184,7 +184,7 @@ impl<T> LinkedList<T> {
     }
 
     fn remove(&mut self, link: NonNull<Node<T>>) -> Node<T> {
-        let node = unsafe { Box::from_raw(link.as_ptr()) };
+        let node = unsafe { Box::from_non_null(link) };
 
         let next = node.next;
         let prev = node.prev;

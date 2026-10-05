@@ -75,9 +75,9 @@ impl Pack {
     where
         T: Packable,
     {
-        let mut data = self.make_mut();
+        let data = self.make_mut();
         data.reserve(value.pack_size());
-        value.pack_write(&mut data);
+        value.pack_write(&mut *data);
         self.len += 1;
     }
 
@@ -87,10 +87,10 @@ impl Pack {
         A: Packable,
         B: Packable,
     {
-        let mut data = self.make_mut();
+        let data = self.make_mut();
         data.reserve(a.pack_size() + b.pack_size());
-        a.pack_write(&mut data);
-        b.pack_write(&mut data);
+        a.pack_write(&mut *data);
+        b.pack_write(&mut *data);
         self.len += 2;
     }
 
@@ -471,7 +471,7 @@ impl Cursor<'_> {
     {
         self.pack.len += 1;
         let size = a.pack_size();
-        let mut data = self.pack.make_mut();
+        let data = self.pack.make_mut();
         data.reserve(size);
         let tail_len = data.len() - self.offset;
         unsafe {
@@ -480,7 +480,7 @@ impl Cursor<'_> {
             from.copy_to(to, tail_len);
             data.set_len(self.offset);
         }
-        a.pack_write(&mut data);
+        a.pack_write(&mut *data);
         unsafe {
             data.set_len(self.offset + size + tail_len);
         }
@@ -494,7 +494,7 @@ impl Cursor<'_> {
     {
         self.pack.len += 2;
         let size = a.pack_size() + b.pack_size();
-        let mut data = self.pack.make_mut();
+        let data = self.pack.make_mut();
         data.reserve(size);
         let tail_len = data.len() - self.offset;
         unsafe {
@@ -503,8 +503,8 @@ impl Cursor<'_> {
             from.copy_to(to, tail_len);
             data.set_len(self.offset);
         }
-        a.pack_write(&mut data);
-        b.pack_write(&mut data);
+        a.pack_write(&mut *data);
+        b.pack_write(&mut *data);
         unsafe {
             data.set_len(self.offset + size + tail_len);
         }
@@ -521,7 +521,7 @@ impl Cursor<'_> {
             self.offset
         };
         let new_size = value.pack_size();
-        let mut data = self.pack.make_mut();
+        let data = self.pack.make_mut();
 
         if old_size == new_size {
             value.pack_write(&mut data[offset..]);
@@ -539,7 +539,7 @@ impl Cursor<'_> {
             from.copy_to(to, tail_len);
             data.set_len(offset);
         }
-        value.pack_write(&mut data);
+        value.pack_write(&mut *data);
         unsafe {
             data.set_len(offset + new_size + tail_len);
         }

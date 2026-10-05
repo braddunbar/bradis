@@ -97,7 +97,7 @@ impl Request {
 
     /// Assert that the number of remaining arguments is a factor of 2.
     pub fn assert_pairs(&self) -> Result<(), ReplyError> {
-        if self.remaining() % 2 == 0 {
+        if self.remaining().is_multiple_of(2) {
             Ok(())
         } else {
             Err(self.wrong_arguments())

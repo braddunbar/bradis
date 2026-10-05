@@ -200,10 +200,10 @@ impl Hash {
         StringValue: From<&'a Q>,
         V: Into<StringValue> + Packable,
     {
-        if let Hash::PackMap(_) = self {
-            if key.pack_size() > max_size || value.pack_size() > max_size {
-                self.convert();
-            }
+        if let Hash::PackMap(_) = self
+            && (key.pack_size() > max_size || value.pack_size() > max_size)
+        {
+            self.convert();
         }
 
         match self {

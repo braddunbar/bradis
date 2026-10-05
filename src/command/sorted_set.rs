@@ -219,15 +219,15 @@ fn zadd(client: &mut Client, store: &mut Store) -> CommandResult {
         let score = client.request.not_nan()?;
         let member = client.request.pop()?;
 
-        if gt || lt {
-            if let Some(current) = set.score(&member) {
-                if gt && *score <= current {
-                    continue;
-                }
+        if (gt || lt)
+            && let Some(current) = set.score(&member)
+        {
+            if gt && *score <= current {
+                continue;
+            }
 
-                if lt && *score >= current {
-                    continue;
-                }
+            if lt && *score >= current {
+                continue;
             }
         }
 

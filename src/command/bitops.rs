@@ -194,7 +194,7 @@ fn bitcount(client: &mut Client, store: &mut Store) -> CommandResult {
 
     // Count the ones in the first n % 8 bits of slice[n / 8].
     fn count_first(slice: &[u8], n: usize) -> i64 {
-        if n % 8 == 0 {
+        if n.is_multiple_of(8) {
             return 0;
         }
         i64::from((!(!0 >> (n % 8)) & slice[n / 8]).count_ones())

@@ -52,8 +52,7 @@ impl IntSet {
         fn contains<T: Ord + TryFrom<i64>>(set: &[T], value: i64) -> bool {
             value
                 .try_into()
-                .map(|i| set.binary_search(&i).is_ok())
-                .unwrap_or(false)
+                .is_ok_and(|i| set.binary_search(&i).is_ok())
         }
 
         use IntSet::*;
@@ -141,9 +140,9 @@ impl IntSet {
 
         use IntSet::*;
         let result = match self {
-            I8(set) => value.try_into().map(|i| remove(set, &i)).unwrap_or(false),
-            I16(set) => value.try_into().map(|i| remove(set, &i)).unwrap_or(false),
-            I32(set) => value.try_into().map(|i| remove(set, &i)).unwrap_or(false),
+            I8(set) => value.try_into().is_ok_and(|i| remove(set, &i)),
+            I16(set) => value.try_into().is_ok_and(|i| remove(set, &i)),
+            I32(set) => value.try_into().is_ok_and(|i| remove(set, &i)),
             I64(set) => remove(set, &value),
         };
         if result {

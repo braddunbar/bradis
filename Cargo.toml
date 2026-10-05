@@ -4,7 +4,7 @@ authors = ["Brad Dunbar <dunbarb2@gmail.com>"]
 description = "Brad is"
 edition = "2024"
 license = "MIT"
-rust-version = "1.85.0"
+rust-version = "1.99.0"
 version = "0.1.0"
 resolver = "2"
 

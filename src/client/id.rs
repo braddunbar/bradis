@@ -12,7 +12,7 @@ impl ClientId {
     /// Get the next [`ClientId`].
     pub fn next() -> ClientId {
         let update = |x: i64| x.checked_add(1);
-        let next = NEXT_ID.fetch_update(Relaxed, Relaxed, update);
+        let next = NEXT_ID.try_update(Relaxed, Relaxed, update);
         ClientId(next.expect("too many client ids"))
     }
 }
